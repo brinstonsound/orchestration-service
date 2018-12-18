@@ -14,9 +14,9 @@ router.get('/', async (req, res, next) => {
     const result = await actions.findActions(options);
     res.status(result.status || 200).send(result.data);
   } catch (err) {
-    return res.status(500).send({
-      status: 500,
-      error: 'Server Error'
+    return res.status(err.status).send({
+      status: err.status,
+      error: err.error
     });
   }
 });
@@ -33,9 +33,9 @@ router.post('/', async (req, res, next) => {
     const result = await actions.createAction(options);
     res.status(result.status || 200).send(result.data);
   } catch (err) {
-    return res.status(500).send({
-      status: 500,
-      error: 'Server Error'
+    return res.status(err.status).send({
+      status: err.status,
+      error: err.error
     });
   }
 });
@@ -51,9 +51,9 @@ router.get('/:actionId', async (req, res, next) => {
     const result = await actions.getAction(options);
     res.status(result.status || 200).send(result.data);
   } catch (err) {
-    return res.status(500).send({
-      status: 500,
-      error: 'Server Error'
+    return res.status(err.status).send({
+      status: err.status,
+      error: err.error
     });
   }
 });
@@ -70,9 +70,9 @@ router.put('/:actionId', async (req, res, next) => {
     const result = await actions.updateAction(options);
     res.status(result.status || 200).send(result.data);
   } catch (err) {
-    return res.status(500).send({
-      status: 500,
-      error: 'Server Error'
+    return res.status(err.status).send({
+      status: err.status,
+      error: err.error
     });
   }
 });
@@ -88,9 +88,9 @@ router.delete('/:actionId', async (req, res, next) => {
     const result = await actions.deleteAction(options);
     res.status(result.status || 200).send(result.data);
   } catch (err) {
-    return res.status(500).send({
-      status: 500,
-      error: 'Server Error'
+    return res.status(err.status).send({
+      status: err.status,
+      error: err.error
     });
   }
 });

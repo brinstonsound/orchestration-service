@@ -14,9 +14,9 @@ router.get('/', async (req, res, next) => {
     const result = await triggers.findTriggers(options);
     res.status(result.status || 200).send(result.data);
   } catch (err) {
-    return res.status(500).send({
-      status: 500,
-      error: 'Server Error'
+    return res.status(err.status).send({
+      status: err.status,
+      error: err.error
     });
   }
 });
@@ -33,9 +33,9 @@ router.post('/', async (req, res, next) => {
     const result = await triggers.createTrigger(options);
     res.status(result.status || 200).send(result.data);
   } catch (err) {
-    return res.status(500).send({
-      status: 500,
-      error: 'Server Error'
+    return res.status(err.status).send({
+      status: err.status,
+      error: err.error
     });
   }
 });
@@ -51,9 +51,9 @@ router.get('/:triggerId', async (req, res, next) => {
     const result = await triggers.getTrigger(options);
     res.status(result.status || 200).send(result.data);
   } catch (err) {
-    return res.status(500).send({
-      status: 500,
-      error: 'Server Error'
+    return res.status(err.status).send({
+      status: err.status,
+      error: err.error
     });
   }
 });
@@ -70,9 +70,9 @@ router.put('/:triggerId', async (req, res, next) => {
     const result = await triggers.updateTrigger(options);
     res.status(result.status || 200).send(result.data);
   } catch (err) {
-    return res.status(500).send({
-      status: 500,
-      error: 'Server Error'
+    return res.status(err.status).send({
+      status: err.status,
+      error: err.error
     });
   }
 });
@@ -88,9 +88,9 @@ router.delete('/:triggerId', async (req, res, next) => {
     const result = await triggers.deleteTrigger(options);
     res.status(result.status || 200).send(result.data);
   } catch (err) {
-    return res.status(500).send({
-      status: 500,
-      error: 'Server Error'
+    return res.status(err.status).send({
+      status: err.status,
+      error: err.error
     });
   }
 });
@@ -108,9 +108,9 @@ router.post('/:triggerId/fire', async (req, res, next) => {
     const result = await triggers.postTriggersByTriggerIdFire(options);
     res.status(result.status || 200).send(result.data);
   } catch (err) {
-    return res.status(500).send({
-      status: 500,
-      error: 'Server Error'
+    return res.status(err.status).send({
+      status: err.status,
+      error: err.error
     });
   }
 });

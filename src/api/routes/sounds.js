@@ -14,9 +14,9 @@ router.get('/', async (req, res, next) => {
     const result = await sounds.findSounds(options);
     res.status(result.status || 200).send(result.data);
   } catch (err) {
-    return res.status(500).send({
-      status: 500,
-      error: 'Server Error'
+    return res.status(err.status).send({
+      status: err.status,
+      error: err.error
     });
   }
 });
@@ -33,9 +33,9 @@ router.post('/', async (req, res, next) => {
     const result = await sounds.createSound(options);
     res.status(result.status || 200).send(result.data);
   } catch (err) {
-    return res.status(500).send({
-      status: 500,
-      error: 'Server Error'
+    return res.status(err.status).send({
+      status: err.status,
+      error: err.error
     });
   }
 });
@@ -51,9 +51,9 @@ router.get('/:soundId', async (req, res, next) => {
     const result = await sounds.getSound(options);
     res.status(result.status || 200).send(result.data);
   } catch (err) {
-    return res.status(500).send({
-      status: 500,
-      error: 'Server Error'
+    return res.status(err.status).send({
+      status: err.status,
+      error: err.error
     });
   }
 });
@@ -70,9 +70,9 @@ router.put('/:soundId', async (req, res, next) => {
     const result = await sounds.updateSound(options);
     res.status(result.status || 200).send(result.data);
   } catch (err) {
-    return res.status(500).send({
-      status: 500,
-      error: 'Server Error'
+    return res.status(err.status).send({
+      status: err.status,
+      error: err.error
     });
   }
 });
@@ -88,9 +88,9 @@ router.delete('/:soundId', async (req, res, next) => {
     const result = await sounds.deleteSound(options);
     res.status(result.status || 200).send(result.data);
   } catch (err) {
-    return res.status(500).send({
-      status: 500,
-      error: 'Server Error'
+    return res.status(err.status).send({
+      status: err.status,
+      error: err.error
     });
   }
 });

@@ -14,9 +14,9 @@ router.get('/', async (req, res, next) => {
     const result = await orchestrations.findOrchestrations(options);
     res.status(result.status || 200).send(result.data);
   } catch (err) {
-    return res.status(500).send({
-      status: 500,
-      error: 'Server Error'
+    return res.status(err.status).send({
+      status: err.status,
+      error: err.error
     });
   }
 });
@@ -33,9 +33,9 @@ router.post('/', async (req, res, next) => {
     const result = await orchestrations.createOrchestration(options);
     res.status(result.status || 200).send(result.data);
   } catch (err) {
-    return res.status(500).send({
-      status: 500,
-      error: 'Server Error'
+    return res.status(err.status).send({
+      status: err.status,
+      error: err.error
     });
   }
 });
@@ -51,9 +51,9 @@ router.get('/:orchestrationId', async (req, res, next) => {
     const result = await orchestrations.getOrchestration(options);
     res.status(result.status || 200).send(result.data);
   } catch (err) {
-    return res.status(500).send({
-      status: 500,
-      error: 'Server Error'
+    return res.status(err.status).send({
+      status: err.status,
+      error: err.error
     });
   }
 });
@@ -70,9 +70,9 @@ router.put('/:orchestrationId', async (req, res, next) => {
     const result = await orchestrations.updateOrchestration(options);
     res.status(result.status || 200).send(result.data);
   } catch (err) {
-    return res.status(500).send({
-      status: 500,
-      error: 'Server Error'
+    return res.status(err.status).send({
+      status: err.status,
+      error: err.error
     });
   }
 });
@@ -88,9 +88,9 @@ router.delete('/:orchestrationId', async (req, res, next) => {
     const result = await orchestrations.deleteOrchestration(options);
     res.status(result.status || 200).send(result.data);
   } catch (err) {
-    return res.status(500).send({
-      status: 500,
-      error: 'Server Error'
+    return res.status(err.status).send({
+      status: err.status,
+      error: err.error
     });
   }
 });
@@ -106,9 +106,9 @@ router.post('/:orchestrationId/execute', async (req, res, next) => {
     const result = await orchestrations.postOrchestrationsByOrchestrationIdExecute(options);
     res.status(result.status || 200).send(result.data);
   } catch (err) {
-    return res.status(500).send({
-      status: 500,
-      error: 'Server Error'
+    return res.status(err.status).send({
+      status: err.status,
+      error: err.error
     });
   }
 });

@@ -20,6 +20,7 @@ app.use('/symphonies', require('./routes/symphonies'));
 app.use('/sounds', require('./routes/sounds'));
 app.use('/triggers', require('./routes/triggers'));
 app.use('/soundcategories', require('./routes/soundcategories'));
+app.use('/players', require('./routes/players'));
 
 // catch 404
 app.use((req, res, next) => {

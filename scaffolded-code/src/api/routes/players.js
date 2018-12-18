@@ -1,17 +1,17 @@
 const express = require('express');
-const symphonies = require('../services/symphonies');
+const players = require('../services/players');
 
 const router = new express.Router();
 
 /**
- * List all Symphonies
+ * List Player
  */
 router.get('/', async (req, res, next) => {
   const options = {
   };
 
   try {
-    const result = await symphonies.findSymphonies(options);
+    const result = await players.findPlayers(options);
     res.status(result.status || 200).send(result.data);
   } catch (err) {
     return res.status(err.status).send({
@@ -22,7 +22,7 @@ router.get('/', async (req, res, next) => {
 });
 
 /**
- * Create Symphony
+ * Create Player
  */
 router.post('/', async (req, res, next) => {
   const options = {
@@ -30,7 +30,7 @@ router.post('/', async (req, res, next) => {
   };
 
   try {
-    const result = await symphonies.createSymphony(options);
+    const result = await players.createPlayer(options);
     res.status(result.status || 200).send(result.data);
   } catch (err) {
     return res.status(err.status).send({
@@ -41,14 +41,14 @@ router.post('/', async (req, res, next) => {
 });
 
 /**
- * Get Symphony
+ * Get Player
  */
-router.get('/:symphonyId', async (req, res, next) => {
+router.get('/:playerId', async (req, res, next) => {
   const options = {
   };
 
   try {
-    const result = await symphonies.getSymphony(options);
+    const result = await players.getPlayer(options);
     res.status(result.status || 200).send(result.data);
   } catch (err) {
     return res.status(err.status).send({
@@ -59,33 +59,15 @@ router.get('/:symphonyId', async (req, res, next) => {
 });
 
 /**
- * Update Symphony
+ * This operation is called by the sound server when it 
+ * finishes playing a sound.
  */
-router.put('/:symphonyId', async (req, res, next) => {
-  const options = {
-    body: req.body.body
-  };
-
-  try {
-    const result = await symphonies.updateSymphony(options);
-    res.status(result.status || 200).send(result.data);
-  } catch (err) {
-    return res.status(err.status).send({
-      status: err.status,
-      error: err.error
-    });
-  }
-});
-
-/**
- * Delete Symphony
- */
-router.delete('/:symphonyId', async (req, res, next) => {
+router.delete('/:playerId', async (req, res, next) => {
   const options = {
   };
 
   try {
-    const result = await symphonies.deleteSymphony(options);
+    const result = await players.deletePlayer(options);
     res.status(result.status || 200).send(result.data);
   } catch (err) {
     return res.status(err.status).send({

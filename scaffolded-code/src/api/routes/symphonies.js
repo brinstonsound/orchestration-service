@@ -14,9 +14,9 @@ router.get('/', async (req, res, next) => {
     const result = await symphonies.findSymphonies(options);
     res.status(result.status || 200).send(result.data);
   } catch (err) {
-    return res.status(500).send({
-      status: 500,
-      error: 'Server Error'
+    return res.status(err.status).send({
+      status: err.status,
+      error: err.error
     });
   }
 });
@@ -33,9 +33,9 @@ router.post('/', async (req, res, next) => {
     const result = await symphonies.createSymphony(options);
     res.status(result.status || 200).send(result.data);
   } catch (err) {
-    return res.status(500).send({
-      status: 500,
-      error: 'Server Error'
+    return res.status(err.status).send({
+      status: err.status,
+      error: err.error
     });
   }
 });
@@ -51,9 +51,9 @@ router.get('/:symphonyId', async (req, res, next) => {
     const result = await symphonies.getSymphony(options);
     res.status(result.status || 200).send(result.data);
   } catch (err) {
-    return res.status(500).send({
-      status: 500,
-      error: 'Server Error'
+    return res.status(err.status).send({
+      status: err.status,
+      error: err.error
     });
   }
 });
@@ -70,9 +70,9 @@ router.put('/:symphonyId', async (req, res, next) => {
     const result = await symphonies.updateSymphony(options);
     res.status(result.status || 200).send(result.data);
   } catch (err) {
-    return res.status(500).send({
-      status: 500,
-      error: 'Server Error'
+    return res.status(err.status).send({
+      status: err.status,
+      error: err.error
     });
   }
 });
@@ -88,9 +88,9 @@ router.delete('/:symphonyId', async (req, res, next) => {
     const result = await symphonies.deleteSymphony(options);
     res.status(result.status || 200).send(result.data);
   } catch (err) {
-    return res.status(500).send({
-      status: 500,
-      error: 'Server Error'
+    return res.status(err.status).send({
+      status: err.status,
+      error: err.error
     });
   }
 });

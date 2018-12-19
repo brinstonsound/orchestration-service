@@ -7,8 +7,7 @@ const router = new express.Router();
  * List SoundCategory
  */
 router.get('/', async (req, res, next) => {
-  const options = {
-  };
+  const options = {};
 
   try {
     const result = await soundcategories.findSoundCategories(options);
@@ -26,7 +25,7 @@ router.get('/', async (req, res, next) => {
  */
 router.post('/', async (req, res, next) => {
   const options = {
-    body: req.body.body
+    body: req.body
   };
 
   try {
@@ -45,6 +44,7 @@ router.post('/', async (req, res, next) => {
  */
 router.get('/:soundCategoryId', async (req, res, next) => {
   const options = {
+    id: req.params.soundCategoryId
   };
 
   try {
@@ -63,7 +63,8 @@ router.get('/:soundCategoryId', async (req, res, next) => {
  */
 router.put('/:soundCategoryId', async (req, res, next) => {
   const options = {
-    body: req.body.body
+    id: req.params.soundCategoryId,
+    body: req.body
   };
 
   try {
@@ -82,6 +83,7 @@ router.put('/:soundCategoryId', async (req, res, next) => {
  */
 router.delete('/:soundCategoryId', async (req, res, next) => {
   const options = {
+    id: req.params.soundCategoryId
   };
 
   try {

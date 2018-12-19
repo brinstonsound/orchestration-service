@@ -2,6 +2,7 @@
   "name": "airhorn-orchestration-api",
   "description": "",
   "version": "1.0",
+  "license": "MIT",
   "scripts": {
     "start": "node src/bin/www",
     "dev": "node src/bin/www | bunyan"

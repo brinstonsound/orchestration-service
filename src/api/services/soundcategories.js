@@ -1,3 +1,4 @@
+'use esversion: 6';
 /*
  * Sound categories are just a simple list of strings.  They will be stored in a single
  * file called ./data/soundCategories.json

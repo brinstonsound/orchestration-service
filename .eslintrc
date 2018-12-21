@@ -63,7 +63,7 @@ rules:
   #spaced-line-comment: [2, always]
   wrap-regex: 2
   linebreak-style: [2, unix]
-  semi: [2, always]
+  # semi: [2, always]
 
   # ECMAScript 6
   arrow-spacing: [2, {before: true, after: true}]

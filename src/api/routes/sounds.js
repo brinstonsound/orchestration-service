@@ -7,11 +7,9 @@ const router = new express.Router();
  * List all Sounds
  */
 router.get('/', async (req, res, next) => {
-  const options = {
-  };
 
   try {
-    const result = await sounds.findSounds(options);
+    const result = await sounds.findSounds();
     res.status(result.status || 200).send(result.data);
   } catch (err) {
     return res.status(err.status).send({
@@ -26,7 +24,7 @@ router.get('/', async (req, res, next) => {
  */
 router.post('/', async (req, res, next) => {
   const options = {
-    body: req.body.body
+    body: req.body
   };
 
   try {
@@ -45,6 +43,7 @@ router.post('/', async (req, res, next) => {
  */
 router.get('/:soundId', async (req, res, next) => {
   const options = {
+    id: req.params.soundId
   };
 
   try {
@@ -63,7 +62,8 @@ router.get('/:soundId', async (req, res, next) => {
  */
 router.put('/:soundId', async (req, res, next) => {
   const options = {
-    body: req.body.body
+    id: req.params.soundId,
+    body: req.body
   };
 
   try {
@@ -82,6 +82,7 @@ router.put('/:soundId', async (req, res, next) => {
  */
 router.delete('/:soundId', async (req, res, next) => {
   const options = {
+    id: req.params.soundId
   };
 
   try {

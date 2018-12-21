@@ -8,7 +8,6 @@ const router = new express.Router();
  */
 router.get('/', async (req, res, next) => {
   const options = {};
-
   try {
     const result = await soundcategories.findSoundCategories(options);
     res.status(result.status || 200).send(result.data);

@@ -102,6 +102,44 @@ module.exports.getSoundCategory = async options => {
 
 /**
  * @param {Object} options
+ * @throws {Error}
+ * @return {Promise}
+ */
+module.exports.getSoundcategorySounds = async options => {
+  try {
+    // Look for the category in the array
+    const cat = lstCategories.find(obj => {
+      return obj.id == options.id;
+    });
+    let response
+    let categorySounds = [];
+    if (cat) {
+      // Found the category. Now get its sounds
+      const cSounds = require('./sounds')
+      categorySounds = cSounds.lstSounds.filter(obj => {
+        console.log(`Obj soundCategoryId: ${obj.soundCategoryId} cat.id: ${cat.id} Match:${obj.soundCategoryId == cat.id}`)
+        return obj.soundCategoryId == cat.id;
+      });
+      response = {
+        status: 200,
+        data: categorySounds
+      };
+    } else {
+      response = {
+        status: 404,
+        data: 'Item not found'
+      };
+    }
+    return response;
+  } catch (err) {
+    return {
+      status: 500,
+      data: err.message
+    };
+  }
+};
+/**
+ * @param {Object} options
  * @param {} options.body
  * @throws {Error}
  * @return {Promise}

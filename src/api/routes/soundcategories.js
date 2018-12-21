@@ -96,4 +96,22 @@ router.delete('/:soundCategoryId', async (req, res, next) => {
   }
 });
 
+/**
+ * List a category's sounds
+ */
+router.get('/:soundCategoryId/sounds', async (req, res, next) => {
+  const options = {
+    id: req.params.soundCategoryId
+  };
+
+  try {
+    const result = await soundcategories.getSoundcategorySounds(options);
+    res.status(result.status || 200).send(result.data);
+  } catch (err) {
+    return res.status(err.status).send({
+      status: err.status,
+      error: err.error
+    });
+  }
+});
 module.exports = router;

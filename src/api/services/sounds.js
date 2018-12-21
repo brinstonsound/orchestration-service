@@ -14,6 +14,7 @@ function loadSoundList() {
     lstSounds.push(JSON.parse(fs.readFileSync(path.resolve(soundsFolder, file))));
   });
 }
+module.exports.lstSounds = lstSounds
 
 /**
  * @throws {Error}

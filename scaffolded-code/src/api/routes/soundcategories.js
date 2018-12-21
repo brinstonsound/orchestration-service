@@ -4,7 +4,7 @@ const soundcategories = require('../services/soundcategories');
 const router = new express.Router();
 
 /**
- * List SoundCategory
+ * List all Sound Categories
  */
 router.get('/', async (req, res, next) => {
   const options = {
@@ -22,7 +22,7 @@ router.get('/', async (req, res, next) => {
 });
 
 /**
- * Create SoundCategory
+ * Create Sound Category
  */
 router.post('/', async (req, res, next) => {
   const options = {
@@ -41,7 +41,7 @@ router.post('/', async (req, res, next) => {
 });
 
 /**
- * Get SoundCategory
+ * Get a Sound Category
  */
 router.get('/:soundCategoryId', async (req, res, next) => {
   const options = {
@@ -59,7 +59,7 @@ router.get('/:soundCategoryId', async (req, res, next) => {
 });
 
 /**
- * Update SoundCategory
+ * Update a Sound Category
  */
 router.put('/:soundCategoryId', async (req, res, next) => {
   const options = {
@@ -78,7 +78,7 @@ router.put('/:soundCategoryId', async (req, res, next) => {
 });
 
 /**
- * Delete SoundCategory
+ * Delete a Sound Category
  */
 router.delete('/:soundCategoryId', async (req, res, next) => {
   const options = {
@@ -86,6 +86,24 @@ router.delete('/:soundCategoryId', async (req, res, next) => {
 
   try {
     const result = await soundcategories.deleteSoundCategory(options);
+    res.status(result.status || 200).send(result.data);
+  } catch (err) {
+    return res.status(err.status).send({
+      status: err.status,
+      error: err.error
+    });
+  }
+});
+
+/**
+ * List a category's sounds
+ */
+router.get('/:soundCategoryId/sounds', async (req, res, next) => {
+  const options = {
+  };
+
+  try {
+    const result = await soundcategories.getSoundcategoriesBySoundCategoryIdSounds(options);
     res.status(result.status || 200).send(result.data);
   } catch (err) {
     return res.status(err.status).send({

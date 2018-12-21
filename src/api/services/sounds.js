@@ -1,11 +1,13 @@
 'use esversion: 6';
-let lstSounds;
 const soundsFolder = './data/sounds/';
 const fs = require('fs');
 const path = require('path');
 
+let lstSounds;
+loadSoundList()
+
 function loadSoundList() {
-  console.log('Loading all sounds from disk...')
+  console.log('Loading all Sounds from disk...')
   const soundFiles = fs.readdirSync(soundsFolder);
   lstSounds = [];
   soundFiles.forEach(file => {
@@ -42,7 +44,6 @@ module.exports.findSounds = async () => {
  */
 module.exports.createSound = async (options) => {
   try {
-    if (lstSounds === undefined) loadSoundList();
     // Check that the payload has all required elements
     if (options.body.name == undefined) return {
       status: 400,
@@ -83,9 +84,9 @@ module.exports.createSound = async (options) => {
  */
 module.exports.getSound = async (options) => {
   try {
-    if (lstSounds === undefined) loadSoundList();
     // Look for the category in the array
     const result = lstSounds.find(obj => {
+      console.log(`Obj Id: ${obj.id} options.id: ${options.id} Match:${obj.id == options.id}`)
       return obj.id == options.id;
     });
     let response;
@@ -117,7 +118,6 @@ module.exports.getSound = async (options) => {
  */
 module.exports.updateSound = async (options) => {
   try {
-    if (lstSounds === undefined) loadSoundList();
     // Check that the payload has all required elements
     if (options.body.name == undefined) return {
       status: 400,
@@ -128,11 +128,15 @@ module.exports.updateSound = async (options) => {
       data: 'Required element <fileName> is missing.'
     };
     // Find the sound in the collection
-    let theSound = this.getSound(options.id)
-    if (theSound) {
+    let theSound = await this.getSound(options)
+    if (theSound.data.id != undefined) {
       theSound = options.body
-      console.log(JSON.stringify(theSound, null, 4))
+      theSound.id = options.id // Just to make sure we update the right object
+      // Update the file
       fs.writeFileSync(path.resolve(soundsFolder, `${options.id.toString()}.json`), JSON.stringify(theSound, null, 4));
+      // Update the collection
+      const foundIndex = lstSounds.findIndex(x => x.id == options.id)
+      lstSounds[foundIndex] = theSound
       return {
         status: 200,
         data: theSound
@@ -157,15 +161,14 @@ module.exports.updateSound = async (options) => {
  */
 module.exports.deleteSound = async (options) => {
   try {
-    if (lstSounds === undefined) loadSoundList();
-    const theSound = this.getSound(options.id)
-    if (theSound) {
+    const theSound = await this.getSound(options)
+    if (theSound.data.id != undefined) {
       // Found it. Kill it.
-      throw new Error('This filter function is not working.')
-      fs.unlinkSync(path.resolve(soundsFolder, `${options.id.toString()}.json`))
       lstSounds = lstSounds.filter((obj) => {
-        return obj.id !== options.id;
+        //console.log(`Obj Id: ${obj.id} options.id: ${options.id} Match:${obj.id != options.id}`)
+        return obj.id != options.id;
       });
+      fs.unlinkSync(path.resolve(soundsFolder, `${options.id.toString()}.json`))
       return {
         status: 200
       };

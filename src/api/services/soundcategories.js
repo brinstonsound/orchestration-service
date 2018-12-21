@@ -4,11 +4,12 @@
  * file called ./data/soundCategories.json
  */
 
-let lstCategories;
-
 const soundCategoriesFile = "./data/soundCategories.json";
+let lstCategories
+loadCategories()
 
 function loadCategories() {
+  console.log('Loading Sound Categories from disk...')
   const fs = require("fs");
   lstCategories = JSON.parse(fs.readFileSync(soundCategoriesFile));
 }
@@ -25,10 +26,6 @@ function saveCategories() {
  */
 module.exports.findSoundCategories = async options => {
   try {
-    if (lstCategories === undefined) {
-      // lstCategories is not initialized.  Load up the list from the file.
-      loadCategories();
-    }
     return {
       status: 200,
       data: lstCategories
@@ -49,10 +46,6 @@ module.exports.findSoundCategories = async options => {
  */
 module.exports.createSoundCategory = async options => {
   try {
-    if (lstCategories === undefined) {
-      // lstCategories is not initialized.  Load up the list from the file.
-      loadCategories();
-    }
     console.log(options);
     let d = new Date();
     let newId = d.getTime();
@@ -82,10 +75,6 @@ module.exports.createSoundCategory = async options => {
  */
 module.exports.getSoundCategory = async options => {
   try {
-    if (lstCategories === undefined) {
-      // lstCategories is not initialized.  Load up the list from the file.
-      loadCategories();
-    }
     // Look for the category in the array
     const result = lstCategories.find(obj => {
       return obj.id == options.id;
@@ -119,10 +108,6 @@ module.exports.getSoundCategory = async options => {
  */
 module.exports.updateSoundCategory = async options => {
   try {
-    if (lstCategories === undefined) {
-      // lstCategories is not initialized.  Load up the list from the file.
-      loadCategories();
-    }
     // Look for the category in the array
     const category = lstCategories.find(obj => {
       return obj.id == options.id;
@@ -160,10 +145,6 @@ module.exports.updateSoundCategory = async options => {
  */
 module.exports.deleteSoundCategory = async options => {
   try {
-    if (lstCategories === undefined) {
-      // lstCategories is not initialized.  Load up the list from the file.
-      loadCategories();
-    }
     let response;
     const category = lstCategories.find(obj => {
       return obj.id == options.id;

@@ -6,7 +6,7 @@ const path = require('path');
 let lstSymphonies;
 loadSymphoniesList()
 
-function loadSymphoniesList () {
+function loadSymphoniesList() {
   console.log('Loading all Symphonies from disk...')
   if (fs.existsSync(symphoniesFolder)) {
     const files = fs.readdirSync(symphoniesFolder);
@@ -23,10 +23,21 @@ module.exports.lstSymphonies = lstSymphonies
  * @throws {Error}
  * @return {Promise}
  */
-module.exports.findSymphonies = async () => {
+module.exports.findSymphonies = async (options) => {
   try {
     if (lstSymphonies === undefined) loadSymphoniesList();
-
+    if (options != undefined) {
+      if (options.active == 'true') {
+        const result = lstSymphonies.find(obj => {
+          //console.log(`Obj Id: ${obj.id} options.id: ${options.id} Match:${obj.id == options.id}`)
+          return obj.isActive == true;
+        });
+        return {
+          status: 200,
+          data: result
+        };
+      }
+    }
     return {
       status: 200,
       data: lstSymphonies
@@ -67,6 +78,20 @@ module.exports.createSymphony = async (options) => {
     fs.writeFileSync(path.resolve(symphoniesFolder, `${newId.toString()}.json`), JSON.stringify(newSymphony, null, 2));
     // Save the new sound to the collection
     lstSymphonies.push(newSymphony);
+
+    if (newSymphony.isActive) {
+      //Resolve Active Symphony (there can be only one!)'
+      lstSymphonies.forEach(symphony => {
+        if (symphony.isActive && symphony != newSymphony) {
+          // Deactivate this symphony
+          symphony.isActive = false
+          fs.writeFileSync(path.resolve(symphoniesFolder, `${symphony.id.toString()}.json`), JSON.stringify(symphony, null, 2));
+          // Update the collection
+          const foundIndex = lstSymphonies.findIndex(x => x.id == symphony.id)
+          lstSymphonies[foundIndex] = symphony
+        }
+      })
+    }
     return {
       status: 201,
       data: newSymphony
@@ -86,7 +111,7 @@ module.exports.createSymphony = async (options) => {
  */
 module.exports.getSymphony = async (options) => {
   try {
-    // Look for the sound in the array
+    // Look for the item in the array
     const result = lstSymphonies.find(obj => {
       //console.log(`Obj Id: ${obj.id} options.id: ${options.id} Match:${obj.id == options.id}`)
       return obj.id == options.id;
@@ -135,6 +160,21 @@ module.exports.updateSymphony = async (options) => {
       // Update the collection
       const foundIndex = lstSymphonies.findIndex(x => x.id == options.id)
       lstSymphonies[foundIndex] = theSymphony
+
+      if (theSymphony.isActive) {
+        //Resolve Active Symphony (there can be only one!)'
+        lstSymphonies.forEach(symphony => {
+          if (symphony.isActive && symphony != theSymphony) {
+            // Deactivate this symphony
+            symphony.isActive = false
+            fs.writeFileSync(path.resolve(symphoniesFolder, `${symphony.id.toString()}.json`), JSON.stringify(symphony, null, 2));
+            // Update the collection
+            const foundIndex = lstSymphonies.findIndex(x => x.id == symphony.id)
+            lstSymphonies[foundIndex] = symphony
+          }
+        })
+      }
+
       return {
         status: 200,
         data: theSymphony

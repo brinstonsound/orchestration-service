@@ -7,11 +7,8 @@ const router = new express.Router();
  * List all Triggers
  */
 router.get('/', async (req, res, next) => {
-  const options = {
-  };
-
   try {
-    const result = await triggers.findTriggers(options);
+    const result = await triggers.findTriggers();
     res.status(result.status || 200).send(result.data);
   } catch (err) {
     return res.status(err.status).send({
@@ -26,7 +23,7 @@ router.get('/', async (req, res, next) => {
  */
 router.post('/', async (req, res, next) => {
   const options = {
-    body: req.body.body
+    body: req.body
   };
 
   try {
@@ -45,6 +42,7 @@ router.post('/', async (req, res, next) => {
  */
 router.get('/:triggerId', async (req, res, next) => {
   const options = {
+    id: req.params.triggerId
   };
 
   try {
@@ -63,7 +61,8 @@ router.get('/:triggerId', async (req, res, next) => {
  */
 router.put('/:triggerId', async (req, res, next) => {
   const options = {
-    body: req.body.body
+    id: req.params.triggerId,
+    body: req.body
   };
 
   try {
@@ -82,6 +81,7 @@ router.put('/:triggerId', async (req, res, next) => {
  */
 router.delete('/:triggerId', async (req, res, next) => {
   const options = {
+    id: req.params.triggerId
   };
 
   try {
@@ -96,16 +96,16 @@ router.delete('/:triggerId', async (req, res, next) => {
 });
 
 /**
- * When a trigger is fired, the orchastration API will look up 
- * all orchastrations that are associated with it and execute 
+ * When a trigger is fired, the orchestration API will look up
+ * all orchestrations that are associated with it and execute
  * them.
  */
 router.post('/:triggerId/fire', async (req, res, next) => {
-  const options = {
+  const options = {    id: req.params.triggerId
   };
 
   try {
-    const result = await triggers.postTriggersByTriggerIdFire(options);
+    const result = await triggers.fire(options);
     res.status(result.status || 200).send(result.data);
   } catch (err) {
     return res.status(err.status).send({

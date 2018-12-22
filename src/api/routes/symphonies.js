@@ -8,7 +8,10 @@ const router = new express.Router();
  */
 router.get('/', async (req, res, next) => {
   try {
-    const result = await symphonies.findSymphonies();
+    const options = {
+      active: req.query.active
+    }
+    const result = await symphonies.findSymphonies(options);
     res.status(result.status || 200).send(result.data);
   } catch (err) {
     return res.status(err.status).send({

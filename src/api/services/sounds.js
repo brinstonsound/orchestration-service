@@ -6,7 +6,7 @@ const path = require('path');
 let lstSounds;
 loadSoundList()
 
-function loadSoundList() {
+function loadSoundList () {
   console.log('Loading all Sounds from disk...')
   const soundFiles = fs.readdirSync(soundsFolder);
   lstSounds = [];
@@ -85,9 +85,9 @@ module.exports.createSound = async (options) => {
  */
 module.exports.getSound = async (options) => {
   try {
-    // Look for the category in the array
+    // Look for the sound in the array
     const result = lstSounds.find(obj => {
-      console.log(`Obj Id: ${obj.id} options.id: ${options.id} Match:${obj.id == options.id}`)
+      //console.log(`Obj Id: ${obj.id} options.id: ${options.id} Match:${obj.id == options.id}`)
       return obj.id == options.id;
     });
     let response;

@@ -4,18 +4,18 @@
  * file called ./data/soundCategories.json
  */
 
-const soundCategoriesFile = "./data/soundCategories.json";
+const soundCategoriesFile = './data/soundCategories.json';
 let lstCategories
 loadCategories()
 
-function loadCategories() {
+function loadCategories () {
   console.log('Loading Sound Categories from disk...')
-  const fs = require("fs");
+  const fs = require('fs');
   lstCategories = JSON.parse(fs.readFileSync(soundCategoriesFile));
 }
 
-function saveCategories() {
-  const fs = require("fs");
+function saveCategories () {
+  const fs = require('fs');
   fs.writeFileSync(soundCategoriesFile, JSON.stringify(lstCategories));
 }
 
@@ -24,7 +24,7 @@ function saveCategories() {
  * @throws {Error}
  * @return {Promise}
  */
-module.exports.findSoundCategories = async options => {
+module.exports.findSoundCategories = async () => {
   try {
     return {
       status: 200,
@@ -47,8 +47,8 @@ module.exports.findSoundCategories = async options => {
 module.exports.createSoundCategory = async options => {
   try {
     console.log(options);
-    let d = new Date();
-    let newId = d.getTime();
+    const d = new Date();
+    const newId = d.getTime();
     const newCat = {
       id: newId,
       name: options.body.name,

@@ -7,11 +7,8 @@ const router = new express.Router();
  * List Orchestration
  */
 router.get('/', async (req, res, next) => {
-  const options = {
-  };
-
   try {
-    const result = await orchestrations.findOrchestrations(options);
+    const result = await orchestrations.findOrchestrations();
     res.status(result.status || 200).send(result.data);
   } catch (err) {
     return res.status(err.status).send({
@@ -26,7 +23,7 @@ router.get('/', async (req, res, next) => {
  */
 router.post('/', async (req, res, next) => {
   const options = {
-    body: req.body.body
+    body: req.body
   };
 
   try {
@@ -45,6 +42,7 @@ router.post('/', async (req, res, next) => {
  */
 router.get('/:orchestrationId', async (req, res, next) => {
   const options = {
+    id: req.params.orchestrationId
   };
 
   try {
@@ -63,7 +61,8 @@ router.get('/:orchestrationId', async (req, res, next) => {
  */
 router.put('/:orchestrationId', async (req, res, next) => {
   const options = {
-    body: req.body.body
+    id: req.params.orchestrationId,
+    body: req.body
   };
 
   try {
@@ -82,6 +81,7 @@ router.put('/:orchestrationId', async (req, res, next) => {
  */
 router.delete('/:orchestrationId', async (req, res, next) => {
   const options = {
+    id: req.params.orchestrationId
   };
 
   try {
@@ -100,10 +100,11 @@ router.delete('/:orchestrationId', async (req, res, next) => {
  */
 router.post('/:orchestrationId/execute', async (req, res, next) => {
   const options = {
+    id: req.params.orchestrationId
   };
 
   try {
-    const result = await orchestrations.postOrchestrationsByOrchestrationIdExecute(options);
+    const result = await orchestrations.execute(options);
     res.status(result.status || 200).send(result.data);
   } catch (err) {
     return res.status(err.status).send({

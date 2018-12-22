@@ -1,7 +1,7 @@
 {
   "name": "airhorn-orchestration-api",
   "description": "",
-  "version": "1.0",
+  "version": "1.0.0",
   "license": "MIT",
   "scripts": {
     "start": "node src/bin/www",

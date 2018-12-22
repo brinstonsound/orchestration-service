@@ -171,7 +171,7 @@
         ]
       },
       "post": {
-        "summary": "Create Action",
+        "summary": "Add an Action to an Orchestration",
         "operationId": "createAction",
         "parameters": [
           {
@@ -1016,13 +1016,16 @@
       "type": "object",
       "properties": {
         "id": {
-          "type": "integer"
+          "type": "integer",
+          "minimum": 0
         },
         "name": {
           "type": "string"
         },
         "startDelay": {
-          "type": "integer"
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3600
         },
         "actions": {
           "type": "array",
@@ -1031,7 +1034,8 @@
           }
         },
         "symphonyId": {
-          "type": "integer"
+          "type": "integer",
+          "minimum": 0
         },
         "triggers": {
           "type": "array",
@@ -1043,6 +1047,7 @@
       "required": [
         "id",
         "name",
+        "startDelay",
         "symphonyId"
       ]
     },
@@ -1086,37 +1091,41 @@
     },
     "action-common": {
       "title": "Action",
-      "description": "An action is the atomic unit within an orchestration.  There can be multiple actions in each orchestration.\n Actions can include:\n* Call the sound server to play a sound\n* Call the actuator server to move a motor or open/close a switch\n* Call another orchestration\n* Call an external API\nAll actions are executed simultaneously by the orchestration, however each action can have a delayed start.",
+      "description": "An action is the atomic unit within an orchestration.  There can be multiple actions in each orchestration.\n Actions can include:\n* Call the sound server to play a sound\n* Call another orchestration\n* (future) Call the actuator server to move a motor or open/close a switch\n* (future) Call an external API\nAll actions are executed simultaneously by the orchestration, however each action can have a delayed start.",
       "type": "object",
       "properties": {
         "id": {
-          "type": "integer"
+          "type": "integer",
+          "minimum": 0
         },
         "name": {
           "type": "string"
         },
         "orchestrationId": {
-          "type": "integer"
+          "type": "integer",
+          "minimum": 0
         },
         "sound": {
           "type": "object",
           "properties": {
             "soundId": {
-              "type": "number"
+              "type": "integer",
+              "minimum": 0
             },
             "volume": {
-              "type": "number"
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
             },
             "speakers": {
               "type": "array",
               "items": {
-                "type": "integer"
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 15
               }
             }
           }
-        },
-        "rawApiCall": {
-          "type": "string"
         }
       },
       "required": [
@@ -1170,7 +1179,8 @@
       "type": "object",
       "properties": {
         "id": {
-          "type": "integer"
+          "type": "integer",
+          "minimum": 0
         },
         "name": {
           "type": "string"
@@ -1184,7 +1194,12 @@
             "$ref": "#/definitions/orchestration-common"
           }
         }
-      }
+      },
+      "required": [
+        "id",
+        "name",
+        "isActive"
+      ]
     },
     "symphony-input": {
       "title": "Symphony Input",
@@ -1231,18 +1246,26 @@
       "type": "object",
       "properties": {
         "id": {
-          "type": "integer"
+          "type": "integer",
+          "minimum": 0
         },
         "name": {
           "type": "string"
         },
         "soundCategoryId": {
-          "type": "string"
+          "type": "integer",
+          "minimum": 0
         },
         "fileName": {
           "type": "string"
         }
-      }
+      },
+      "required": [
+        "id",
+        "name",
+        "soundCategoryId",
+        "fileName"
+      ]
     },
     "sound-input": {
       "title": "Sound Input",
@@ -1289,7 +1312,8 @@
       "type": "object",
       "properties": {
         "id": {
-          "type": "integer"
+          "type": "integer",
+          "minimum": 0
         },
         "name": {
           "type": "string"
@@ -1302,15 +1326,23 @@
           ]
         },
         "switchNumber": {
-          "type": "integer"
+          "type": "integer",
+          "minimum": 0
         },
         "timerIntervalMin": {
-          "type": "integer"
+          "type": "integer",
+          "minimum": 0
         },
         "timerIntervalMax": {
-          "type": "integer"
+          "type": "integer",
+          "minimum": 0
         }
-      }
+      },
+      "required": [
+        "id",
+        "name",
+        "type"
+      ]
     },
     "trigger-input": {
       "title": "Trigger Input",
@@ -1357,15 +1389,21 @@
       "type": "object",
       "properties": {
         "id": {
-          "type": "integer"
+          "type": "integer",
+          "minimum": 0
         },
         "name": {
           "type": "string"
         },
         "parentId": {
-          "type": "integer"
+          "type": "integer",
+          "minimum": 0
         }
-      }
+      },
+      "required": [
+        "id",
+        "name"
+      ]
     },
     "sound-category-input": {
       "title": "SoundCategory Input",
@@ -1412,7 +1450,8 @@
       "type": "object",
       "properties": {
         "id": {
-          "type": "integer"
+          "type": "integer",
+          "minimum": 0
         }
       }
     },

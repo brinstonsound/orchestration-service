@@ -1,0 +1,12 @@
+{
+    "id": 1545496666969,
+    "name": "Ring da udder Bell",
+    "sound": {
+        "soundId": 1545358498610,
+        "volume": 0.429761,
+        "speakers": [
+            1,
+            13
+        ]
+    }
+}

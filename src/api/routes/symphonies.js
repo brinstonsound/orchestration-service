@@ -7,11 +7,8 @@ const router = new express.Router();
  * List all Symphonies
  */
 router.get('/', async (req, res, next) => {
-  const options = {
-  };
-
   try {
-    const result = await symphonies.findSymphonies(options);
+    const result = await symphonies.findSymphonies();
     res.status(result.status || 200).send(result.data);
   } catch (err) {
     return res.status(err.status).send({
@@ -26,7 +23,7 @@ router.get('/', async (req, res, next) => {
  */
 router.post('/', async (req, res, next) => {
   const options = {
-    body: req.body.body
+    body: req.body
   };
 
   try {
@@ -45,6 +42,7 @@ router.post('/', async (req, res, next) => {
  */
 router.get('/:symphonyId', async (req, res, next) => {
   const options = {
+    id: req.params.symphonyId
   };
 
   try {
@@ -63,7 +61,8 @@ router.get('/:symphonyId', async (req, res, next) => {
  */
 router.put('/:symphonyId', async (req, res, next) => {
   const options = {
-    body: req.body.body
+    id: req.params.symphonyId,
+    body: req.body
   };
 
   try {
@@ -82,6 +81,7 @@ router.put('/:symphonyId', async (req, res, next) => {
  */
 router.delete('/:symphonyId', async (req, res, next) => {
   const options = {
+    id: req.params.symphonyId
   };
 
   try {

@@ -11,7 +11,11 @@ loadCategories()
 function loadCategories () {
   console.log('Loading Sound Categories from disk...')
   const fs = require('fs');
-  lstCategories = JSON.parse(fs.readFileSync(soundCategoriesFile));
+  if (fs.existsSync(soundCategoriesFile)) {
+    lstCategories = JSON.parse(fs.readFileSync(soundCategoriesFile));
+  } else {
+    console.log(`ERROR: Sound categories file not found at ${soundCategoriesFile}`)
+  }
 }
 
 function saveCategories () {

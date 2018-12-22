@@ -6,13 +6,15 @@ const path = require('path');
 let lstOrchestrations;
 loadOrchestrations()
 
-function loadOrchestrations() {
+function loadOrchestrations () {
   console.log('Loading all Orchestrations from disk...')
-  const files = fs.readdirSync(orchestrationsFolder);
-  lstOrchestrations = [];
-  files.forEach(file => {
-    lstOrchestrations.push(JSON.parse(fs.readFileSync(path.resolve(orchestrationsFolder, file))));
-  });
+  if (fs.existsSync(orchestrationsFolder)) {
+    const files = fs.readdirSync(orchestrationsFolder);
+    lstOrchestrations = [];
+    files.forEach(file => {
+      lstOrchestrations.push(JSON.parse(fs.readFileSync(path.resolve(orchestrationsFolder, file))));
+    });
+  }
 }
 module.exports.lstOrchestrations = lstOrchestrations
 

@@ -8,11 +8,15 @@ loadSoundList()
 
 function loadSoundList () {
   console.log('Loading all Sounds from disk...')
-  const soundFiles = fs.readdirSync(soundsFolder);
-  lstSounds = [];
-  soundFiles.forEach(file => {
-    lstSounds.push(JSON.parse(fs.readFileSync(path.resolve(soundsFolder, file))));
-  });
+  if (fs.existsSync(soundsFolder)) {
+    const soundFiles = fs.readdirSync(soundsFolder);
+    lstSounds = [];
+    soundFiles.forEach(file => {
+      lstSounds.push(JSON.parse(fs.readFileSync(path.resolve(soundsFolder, file))));
+    });
+  } else {
+    console.log(`ERROR: No sounds found at ${soundsFolder}`)
+  }
 }
 module.exports.lstSounds = lstSounds
 

@@ -7,8 +7,7 @@ const router = new express.Router();
  * List Action
  */
 router.get('/', async (req, res, next) => {
-  const options = {
-  };
+  const options = {};
 
   try {
     const result = await actions.findActions(options);
@@ -26,7 +25,7 @@ router.get('/', async (req, res, next) => {
  */
 router.post('/', async (req, res, next) => {
   const options = {
-    body: req.body.body
+    body: req.body
   };
 
   try {
@@ -45,6 +44,7 @@ router.post('/', async (req, res, next) => {
  */
 router.get('/:actionId', async (req, res, next) => {
   const options = {
+    id: req.params.actionId,
   };
 
   try {
@@ -63,7 +63,8 @@ router.get('/:actionId', async (req, res, next) => {
  */
 router.put('/:actionId', async (req, res, next) => {
   const options = {
-    body: req.body.body
+    id: req.params.actionId,
+    body: req.body
   };
 
   try {
@@ -82,6 +83,7 @@ router.put('/:actionId', async (req, res, next) => {
  */
 router.delete('/:actionId', async (req, res, next) => {
   const options = {
+    id: req.params.actionId,
   };
 
   try {

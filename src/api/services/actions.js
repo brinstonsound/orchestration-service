@@ -1,60 +1,103 @@
+'use esversion: 6';
+const actionsFolder = './data/actions/';
+const fs = require('fs');
+const path = require('path');
+
+let lstActions;
+loadActionList()
+
+function loadActionList () {
+  console.log('Loading all Actions from disk...')
+  if (fs.existsSync(actionsFolder)) {
+    const files = fs.readdirSync(actionsFolder);
+    lstActions = [];
+    files.forEach(file => {
+      lstActions.push(JSON.parse(fs.readFileSync(path.resolve(actionsFolder, file))));
+    });
+  }
+}
+module.exports.lstActions = lstActions
+
 /**
  * @param {Object} options
  * @throws {Error}
  * @return {Promise}
  */
-module.exports.findActions = async (options) => {
-  // Implement your business logic here...
-  //
-  // This function should return as follows:
-  //
-  // return {
-  //   status: 200, // Or another success code.
-  //   data: [] // Optional. You can put whatever you want here.
-  // };
-  //
-  // If an error happens during your business logic implementation,
-  // you should throw an error as follows:
-  //
-  // throw new Error({
-  //   status: 500, // Or another error code.
-  //   error: 'Server Error' // Or another error message.
-  // });
+module.exports.findActions = async () => {
+  // List all actions.
+  try {
+    if (lstActions === undefined) loadActionList();
 
-  return {
-    status: 200,
-    data: 'findActions ok!'
-  };
+    return {
+      status: 200,
+      data: lstActions
+    };
+  } catch (err) {
+    return {
+      status: 500,
+      data: err.message
+    };
+  }
 };
 
 /**
  * @param {Object} options
- * @param {} options.body 
+ * @param {} options.body
  * @throws {Error}
  * @return {Promise}
  */
 module.exports.createAction = async (options) => {
-  // Implement your business logic here...
-  //
-  // This function should return as follows:
-  //
-  // return {
-  //   status: 200, // Or another success code.
-  //   data: [] // Optional. You can put whatever you want here.
-  // };
-  //
-  // If an error happens during your business logic implementation,
-  // you should throw an error as follows:
-  //
-  // throw new Error({
-  //   status: 500, // Or another error code.
-  //   error: 'Server Error' // Or another error message.
-  // });
-
-  return {
-    status: 200,
-    data: 'createAction ok!'
-  };
+  try {
+    // Check that the payload has all required elements
+    if (options.body.name == undefined) return {
+      status: 400,
+      data: 'Required element <name> is missing.'
+    };
+    if (options.body.sound == undefined) return {
+      status: 400,
+      data: 'Required element <sound> is missing.'
+    };
+    if (options.body.orchestrationId == undefined) return {
+      status: 400,
+      data: 'Required element <orchestrationId> is missing.'
+    };
+    if (options.body.sound.soundId == undefined) return {
+      status: 400,
+      data: 'Required element <sound.soundId> is missing.'
+    };
+    if (options.body.sound.volume == undefined) return {
+      status: 400,
+      data: 'Required element <sound.volume> is missing.'
+    };
+    if (options.body.sound.speakers == undefined) return {
+      status: 400,
+      data: 'Required element <sound.speakers> is missing.'
+    };
+    const d = new Date();
+    const newId = d.getTime();
+    const newAction = {
+      id: newId,
+      name: options.body.name,
+      sound: {
+        soundId: options.body.sound.soundId,
+        volume: options.body.sound.volume,
+        speakers: options.body.sound.speakers
+      }
+    }
+    // Save the new sound to disk
+    fs.writeFileSync(path.resolve(actionsFolder, `${newId.toString()}.json`), JSON.stringify(newAction, null, 2));
+    // Save the new sound to the collection
+    lstActions.push(newAction);
+    return {
+      status: 201,
+      data: newAction
+    };
+  } catch (err) {
+    return {
+      status: 500,
+      data: err.message
+    };
+  }
 };
 
 /**
@@ -63,57 +106,91 @@ module.exports.createAction = async (options) => {
  * @return {Promise}
  */
 module.exports.getAction = async (options) => {
-  // Implement your business logic here...
-  //
-  // This function should return as follows:
-  //
-  // return {
-  //   status: 200, // Or another success code.
-  //   data: [] // Optional. You can put whatever you want here.
-  // };
-  //
-  // If an error happens during your business logic implementation,
-  // you should throw an error as follows:
-  //
-  // throw new Error({
-  //   status: 500, // Or another error code.
-  //   error: 'Server Error' // Or another error message.
-  // });
-
-  return {
-    status: 200,
-    data: 'getAction ok!'
-  };
+  try {
+    // Look for the sound in the array
+    const result = lstActions.find(obj => {
+      //console.log(`Obj Id: ${obj.id} options.id: ${options.id} Match:${obj.id == options.id}`)
+      return obj.id == options.id;
+    });
+    let response;
+    if (result) {
+      response = {
+        status: 200,
+        data: result
+      };
+    } else {
+      response = {
+        status: 404,
+        data: 'Item not found'
+      };
+    }
+    return response;
+  } catch (err) {
+    return {
+      status: 500,
+      data: err.message
+    };
+  }
 };
 
 /**
  * @param {Object} options
- * @param {} options.body 
+ * @param {} options.body
  * @throws {Error}
  * @return {Promise}
  */
 module.exports.updateAction = async (options) => {
-  // Implement your business logic here...
-  //
-  // This function should return as follows:
-  //
-  // return {
-  //   status: 200, // Or another success code.
-  //   data: [] // Optional. You can put whatever you want here.
-  // };
-  //
-  // If an error happens during your business logic implementation,
-  // you should throw an error as follows:
-  //
-  // throw new Error({
-  //   status: 500, // Or another error code.
-  //   error: 'Server Error' // Or another error message.
-  // });
-
-  return {
-    status: 200,
-    data: 'updateAction ok!'
-  };
+  try {
+    // Check that the payload has all required elements
+    if (options.body.name == undefined) return {
+      status: 400,
+      data: 'Required element <name> is missing.'
+    };
+    if (options.body.sound == undefined) return {
+      status: 400,
+      data: 'Required element <sound> is missing.'
+    };
+    if (options.body.orchestrationId == undefined) return {
+      status: 400,
+      data: 'Required element <orchestrationId> is missing.'
+    };
+    if (options.body.sound.soundId == undefined) return {
+      status: 400,
+      data: 'Required element <sound.soundId> is missing.'
+    };
+    if (options.body.sound.volume == undefined) return {
+      status: 400,
+      data: 'Required element <sound.volume> is missing.'
+    };
+    if (options.body.sound.speakers == undefined) return {
+      status: 400,
+      data: 'Required element <sound.speakers> is missing.'
+    };
+    // Find the item in the collection
+    let theAction = await this.getAction(options)
+    if (theAction.data.id != undefined) {
+      theAction = options.body
+      theAction.id = options.id // Just to make sure we update the right object
+      // Update the file
+      fs.writeFileSync(path.resolve(actionsFolder, `${options.id.toString()}.json`), JSON.stringify(theAction, null, 2));
+      // Update the collection
+      const foundIndex = lstActions.findIndex(x => x.id == options.id)
+      lstActions[foundIndex] = theAction
+      return {
+        status: 200,
+        data: theAction
+      };
+    }
+    return {
+      status: 404,
+      data: 'Item not found'
+    };
+  } catch (err) {
+    return {
+      status: 500,
+      data: err.message
+    };
+  }
 };
 
 /**
@@ -122,26 +199,27 @@ module.exports.updateAction = async (options) => {
  * @return {Promise}
  */
 module.exports.deleteAction = async (options) => {
-  // Implement your business logic here...
-  //
-  // This function should return as follows:
-  //
-  // return {
-  //   status: 200, // Or another success code.
-  //   data: [] // Optional. You can put whatever you want here.
-  // };
-  //
-  // If an error happens during your business logic implementation,
-  // you should throw an error as follows:
-  //
-  // throw new Error({
-  //   status: 500, // Or another error code.
-  //   error: 'Server Error' // Or another error message.
-  // });
-
-  return {
-    status: 200,
-    data: 'deleteAction ok!'
-  };
+  try {
+    const theAction = await this.getAction(options)
+    if (theAction.data.id != undefined) {
+      // Found it. Kill it.
+      lstActions = lstActions.filter((obj) => {
+        //console.log(`Obj Id: ${obj.id} options.id: ${options.id} Match:${obj.id != options.id}`)
+        return obj.id != options.id;
+      });
+      fs.unlinkSync(path.resolve(actionsFolder, `${options.id.toString()}.json`))
+      return {
+        status: 200
+      };
+    }
+    return {
+      status: 404,
+      data: 'Item not found'
+    };
+  } catch (err) {
+    return {
+      status: 500,
+      data: err.message
+    };
+  }
 };
-

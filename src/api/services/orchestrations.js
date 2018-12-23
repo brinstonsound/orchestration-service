@@ -95,19 +95,19 @@ module.exports.createOrchestration = async (options) => {
 module.exports.getOrchestration = async (options) => {
   try {
     // Look for the item in the array
-    const result = lstOrchestrations.find(obj => {
+    const myOrchestration = lstOrchestrations.find(obj => {
       //console.log(`Obj Id: ${obj.id} options.id: ${options.id} Match:${obj.id == options.id}`)
       return obj.id == options.id;
     });
     let response;
-    if (result) {
+    if (myOrchestration) {
       // TODO:Look up the actions for this orchestration.  Attach them in the result.actions array.
 
       // TODO:Look up the triggers for this orchestration.  Attach them in the result.triggers array.
 
       response = {
         status: 200,
-        data: result
+        data: myOrchestration
       };
     } else {
       response = {
@@ -212,20 +212,44 @@ module.exports.execute = async (options) => {
   // Find the orchestration
   try {
     const theOrch = await this.getOrchestration(options)
-    if (theOrch.data.id != undefined) {
+    if (theOrch.status == 200) {
       // Found it. Check for any actions.
-      if (theOrch.actions == undefined || theOrch.actions.length == 0) {
+      console.log(`Executing orchestration ${theOrch.data.id} - ${theOrch.data.name} now...`)
+      if (theOrch.data.actions == undefined || theOrch.data.actions.length == 0) {
+        console.log(`Orchestration ${theOrch.data.id} - ${theOrch.data.name}: No actions to execute.`)
         return {
           status: 400,
           data: 'No actions to execute.'
         }
       }
-      if (theOrch.startDelay == undefined) theOrch.startDelay = 0 // Set a default start delay of 0 ms.
+      if (theOrch.data.startDelay == undefined) theOrch.data.startDelay = 0 // Set a default start delay of 0 ms.
+      if (theOrch.data.startDelay > 0) {
+        console.log(`Pausing for ${theOrch.data.startDelay} milliseconds...`)
+      }
       setTimeout(() => {
-        // Timeout has expired.
-        // TODO: Execute all actions now.
-
-      }, theOrch.startDelay * 1000);
+        // Timeout has expired.  Execute all actions now.
+        const modActions = require('./actions')
+        const lstActions = modActions.lstActions
+        theOrch.data.actions.forEach(actionId => {
+          const objAction = lstActions.find(obj => {
+            return obj.id == actionId
+          })
+          console.log(`Action: ${objAction.name}`)
+          switch (objAction.type) {
+          case 'SOUND':
+            // Call the sound server
+            console.log(`Calling the Sound Server with Sound ${JSON.stringify(objAction.sound)} *** NOT IMPLEMENTED YET ***`)
+            break
+          case 'ORCHESTRATION':
+            // Call another orchestration
+            console.log(`Chaining to orchestration ${objAction.orchestrationId}`)
+            this.execute({
+              id: objAction.orchestrationId
+            })
+            break
+          }
+        })
+      }, theOrch.data.startDelay);
       return {
         status: 200
       };
@@ -235,6 +259,7 @@ module.exports.execute = async (options) => {
       data: 'Item not found'
     };
   } catch (err) {
+    console.log(`ORCH-EXECUTE Error: ${err.message}`)
     return {
       status: 500,
       data: err.message

@@ -1,87 +1,13 @@
 {
   "id": 36657374,
-  "name": "cupidatat reprehenderit dolore eiusmod mollit",
-  "symphonyId": 1,
+  "name": "Test orchestration 1",
+  "symphonyId": 123,
   "startDelay": 0,
   "actions": [
-    {
-      "id": 68021161,
-      "name": "ad irure elit id",
-      "orchestrationId": 54877688,
-      "sound": {
-        "soundId": 24180987,
-        "volume": 0.32588058017035726,
-        "speakers": [
-          3,
-          8,
-          10
-        ]
-      }
-    },
-    {
-      "id": 46890535,
-      "name": "et aliqua",
-      "orchestrationId": 93566461,
-      "sound": {
-        "soundId": 16193451,
-        "volume": 0.328690708415984,
-        "speakers": [
-          9,
-          5
-        ]
-      }
-    },
-    {
-      "id": 35224203,
-      "name": "aliqua sunt",
-      "orchestrationId": 32683874,
-      "sound": {
-        "soundId": 2922759,
-        "volume": 0.07471022577903508,
-        "speakers": [
-          8
-        ]
-      }
-    },
-    {
-      "id": 46158274,
-      "name": "eu commodo pariatur",
-      "orchestrationId": 61585139,
-      "sound": {
-        "soundId": 23129803,
-        "volume": 0.8715996024861807,
-        "speakers": [
-          1,
-          5,
-          9
-        ]
-      }
-    },
-    {
-      "id": 53250819,
-      "name": "in ut",
-      "orchestrationId": 33109870,
-      "sound": {
-        "soundId": 89271169,
-        "volume": 0.6528128101721435,
-        "speakers": [
-          1,
-          3,
-          14,
-          15,
-          3
-        ]
-      }
-    }
+    1545496638462,
+    1545497777
   ],
   "triggers": [
-    {
-      "id": 84507329,
-      "name": "magn",
-      "type": "TIMER",
-      "switchNumber": 41832396,
-      "timerIntervalMin": 17006927,
-      "timerIntervalMax": 99171521
-    }
+    1545578826970
   ]
 }

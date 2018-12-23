@@ -2,6 +2,7 @@
 const symphoniesFolder = './data/symphonies/';
 const fs = require('fs');
 const path = require('path');
+const settings = require('../../lib/appSettings')
 
 let lstSymphonies;
 loadSymphoniesList()
@@ -28,13 +29,13 @@ module.exports.findSymphonies = async (options) => {
     if (lstSymphonies === undefined) loadSymphoniesList();
     if (options != undefined) {
       if (options.active == 'true') {
-        const result = lstSymphonies.find(obj => {
-          //console.log(`Obj Id: ${obj.id} options.id: ${options.id} Match:${obj.id == options.id}`)
-          return obj.isActive == true;
-        });
+        const activeSymphonyId = settings.getSetting('activeSymphony')
+        const result = await this.getSymphony({
+          id: activeSymphonyId
+        })
         return {
           status: 200,
-          data: result
+          data: result.data
         };
       }
     }
@@ -110,6 +111,13 @@ module.exports.getSymphony = async (options) => {
     });
     let response;
     if (result) {
+      // Load up this symphony's orchestrations
+      const orchestrations = require('./orchestrations')
+      const myOrchestrations = orchestrations.lstOrchestrations.filter((obj) => {
+        //console.log(`Obj symphonyId: ${obj.symphonyId} options.id: ${options.id} Match:${obj.symphonyId == options.id}`)
+        return obj.symphonyId == options.id;
+      });
+      result.orchestrations = myOrchestrations
       response = {
         status: 200,
         data: result

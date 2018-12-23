@@ -2,6 +2,7 @@
 const triggersFolder = './data/triggers/';
 const fs = require('fs');
 const path = require('path');
+const settings = require('../../lib/appSettings')
 const symphonies = require('./symphonies')
 const orchestrations = require('./orchestrations')
 
@@ -239,24 +240,27 @@ module.exports.deleteTrigger = async (options) => {
  */
 module.exports.fire = async (options) => {
   try {
-    const theTrigger = await this.getSound(options)
+    const theTrigger = await this.getTrigger(options)
     if (theTrigger.data.id != undefined) {
       // Found it. Fire it.
       const orchestrationsExecuted = []
       // Get the active symphony
-      const activeSymphonyId = require('./src/lib/appSettings').getSetting('activeSymphony')
-      const symphony = symphonies.getSymphony(activeSymphonyId)
+      const activeSymphonyId = settings.getSetting('activeSymphony')
+      const symphony = await symphonies.getSymphony({id:activeSymphonyId})
       // Look for this trigger in all orchestrations
-      symphony.orchestrations.forEach(orch => {
-        orch.triggers.forEach(orchTrigger => {
-          if (orchTrigger.id == theTrigger.data.id) {
-            // The trigger in the orchestration matches this trigger. Execute the orchestration.
+      symphony.data.orchestrations.forEach(orch => {
+        if (orch.triggers) {
+          const match = orch.triggers.find(obj => {
+          //console.log(`Obj Id: ${obj} options.id: ${options.id} Match:${obj == options.id}`)
+            return obj == options.id;
+          });
+          if (match) {
             orchestrations.execute({
               id: orch.id
             })
             orchestrationsExecuted.push({id: orch.id, name: orch.name})
           }
-        })
+        }
       })
       return {
         status: 200,
@@ -268,6 +272,7 @@ module.exports.fire = async (options) => {
       data: 'Item not found'
     };
   } catch (err) {
+    console.log(`Trigger.Fire Error: ${err.message}`)
     return {
       status: 500,
       data: err.message

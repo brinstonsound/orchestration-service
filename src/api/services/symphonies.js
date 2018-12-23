@@ -6,7 +6,7 @@ const path = require('path');
 let lstSymphonies;
 loadSymphoniesList()
 
-function loadSymphoniesList() {
+function loadSymphoniesList () {
   console.log('Loading all Symphonies from disk...')
   if (fs.existsSync(symphoniesFolder)) {
     const files = fs.readdirSync(symphoniesFolder);
@@ -80,18 +80,10 @@ module.exports.createSymphony = async (options) => {
     lstSymphonies.push(newSymphony);
 
     if (newSymphony.isActive) {
-      //Resolve Active Symphony (there can be only one!)'
-      lstSymphonies.forEach(symphony => {
-        if (symphony.isActive && symphony != newSymphony) {
-          // Deactivate this symphony
-          symphony.isActive = false
-          fs.writeFileSync(path.resolve(symphoniesFolder, `${symphony.id.toString()}.json`), JSON.stringify(symphony, null, 2));
-          // Update the collection
-          const foundIndex = lstSymphonies.findIndex(x => x.id == symphony.id)
-          lstSymphonies[foundIndex] = symphony
-        }
-      })
+      const settings = require('./src/lib/appSettings')
+      settings.updateSetting('activeSymphony', newId)
     }
+
     return {
       status: 201,
       data: newSymphony
@@ -162,17 +154,8 @@ module.exports.updateSymphony = async (options) => {
       lstSymphonies[foundIndex] = theSymphony
 
       if (theSymphony.isActive) {
-        //Resolve Active Symphony (there can be only one!)'
-        lstSymphonies.forEach(symphony => {
-          if (symphony.isActive && symphony != theSymphony) {
-            // Deactivate this symphony
-            symphony.isActive = false
-            fs.writeFileSync(path.resolve(symphoniesFolder, `${symphony.id.toString()}.json`), JSON.stringify(symphony, null, 2));
-            // Update the collection
-            const foundIndex = lstSymphonies.findIndex(x => x.id == symphony.id)
-            lstSymphonies[foundIndex] = symphony
-          }
-        })
+        const settings = require('./src/lib/appSettings')
+        settings.updateSetting('activeSymphony', options.id)
       }
 
       return {

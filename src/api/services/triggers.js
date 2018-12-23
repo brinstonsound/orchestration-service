@@ -8,7 +8,7 @@ const orchestrations = require('./orchestrations')
 let lstTriggers;
 loadTriggerList()
 
-function loadTriggerList() {
+function loadTriggerList () {
   console.log('Loading all Triggers from disk...')
   if (fs.existsSync(triggersFolder)) {
     const files = fs.readdirSync(triggersFolder);
@@ -242,14 +242,25 @@ module.exports.fire = async (options) => {
     const theTrigger = await this.getSound(options)
     if (theTrigger.data.id != undefined) {
       // Found it. Fire it.
-
+      const orchestrationsExecuted = []
       // Get the active symphony
-      const lstSymphony = symphonies.getSymphony
+      const activeSymphonyId = require('./src/lib/appSettings').getSetting('activeSymphony')
+      const symphony = symphonies.getSymphony(activeSymphonyId)
       // Look for this trigger in all orchestrations
-
-      // Execute the orchestration
+      symphony.orchestrations.forEach(orch => {
+        orch.triggers.forEach(orchTrigger => {
+          if (orchTrigger.id == theTrigger.data.id) {
+            // The trigger in the orchestration matches this trigger. Execute the orchestration.
+            orchestrations.execute({
+              id: orch.id
+            })
+            orchestrationsExecuted.push({id: orch.id, name: orch.name})
+          }
+        })
+      })
       return {
-        status: 200
+        status: 200,
+        data: orchestrationsExecuted
       };
     }
     return {
@@ -262,5 +273,4 @@ module.exports.fire = async (options) => {
       data: err.message
     };
   }
-
 };

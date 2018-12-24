@@ -1,13 +1,7 @@
 {
-  "id": 36657374,
+  "id": 11111,
   "name": "Test orchestration 1",
   "symphonyId": 123,
   "startDelay": 0,
-  "actions": [
-    1545496638462,
-    1545497777
-  ],
-  "triggers": [
-    1545578826970
-  ]
+  "triggers": [1545578731995]
 }

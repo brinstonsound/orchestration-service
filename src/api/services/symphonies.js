@@ -192,15 +192,31 @@ module.exports.deleteSymphony = async (options) => {
   try {
     const theSymphony = await this.getSymphony(options)
     if (theSymphony.data.id != undefined) {
-      // Found it. Kill it.
-      lstSymphonies = lstSymphonies.filter((obj) => {
-        //console.log(`Obj Id: ${obj.id} options.id: ${options.id} Match:${obj.id != options.id}`)
-        return obj.id != options.id;
-      });
-      fs.unlinkSync(path.resolve(symphoniesFolder, `${options.id.toString()}.json`))
+      // Found it.
+      if (theSymphony.data.id != settings.getSetting('activeSymphony')) {
+        // Delete all orchestrations in this symphony (gulp!)
+        const orchestrations = require('./orchestrations')
+        const orchs = orchestrations.lstOrchestrations.filter((obj) => {
+          return obj.symphonyId == theSymphony.data.id;
+        })
+        orchs.forEach(orch => {
+          orchestrations.deleteOrchestration({
+            id: orch.id
+          })
+        })
+        // Remove this symphony from the collection
+        lstSymphonies = lstSymphonies.filter((obj) => {
+          return obj.id != options.id;
+        });
+        fs.unlinkSync(path.resolve(symphoniesFolder, `${options.id.toString()}.json`))
+        return {
+          status: 200
+        }
+      }
       return {
-        status: 200
-      };
+        status: 400,
+        data: 'Cannot delete the active symphony.'
+      }
     }
     return {
       status: 404,

@@ -61,32 +61,55 @@ module.exports.createAction = async (options) => {
       status: 400,
       data: 'Required element <orchestrationId> is missing.'
     };
-    if (options.body.sound.soundId == undefined) return {
+    if (options.body.type == undefined) return {
       status: 400,
-      data: 'Required element <sound.soundId> is missing.'
+      data: 'Required element <type> is missing.'
     };
-    if (options.body.sound.volume == undefined) return {
-      status: 400,
-      data: 'Required element <sound.volume> is missing.'
-    };
-    if (options.body.sound.speakers == undefined) return {
-      status: 400,
-      data: 'Required element <sound.speakers> is missing.'
-    };
+    switch (options.body.type) {
+    case 'SOUND':
+      if (options.body.sound.soundId == undefined) return {
+        status: 400,
+        data: 'Required element <sound.soundId> is missing.'
+      };
+      if (options.body.sound.volume == undefined) return {
+        status: 400,
+        data: 'Required element <sound.volume> is missing.'
+      };
+      if (options.body.sound.speakers == undefined) return {
+        status: 400,
+        data: 'Required element <sound.speakers> is missing.'
+      };
+      break
+    case 'ORCHESTRATION':
+      if (options.body.nextOrchestrationId == undefined) return {
+        status: 400,
+        data: 'Required element <nextOrchestrationId> is missing.'
+      };
+      break
+    }
+
     const d = new Date();
     const newId = d.getTime();
     const newAction = {
       id: newId,
       name: options.body.name,
-      sound: {
+      orchestrationId: options.body.orchestrationId
+    }
+    switch (options.body.type) {
+    case 'SOUND':
+      newAction.sound = {
         soundId: options.body.sound.soundId,
         volume: options.body.sound.volume,
         speakers: options.body.sound.speakers
       }
+      break
+    case 'ORCHESTRATION':
+      newAction.nextOrchestrationId = options.body.nextOrchestrationId
+      break
     }
-    // Save the new sound to disk
+    // Save the new action to disk
     fs.writeFileSync(path.resolve(actionsFolder, `${newId.toString()}.json`), JSON.stringify(newAction, null, 2));
-    // Save the new sound to the collection
+    // Save the new action to the collection
     lstActions.push(newAction);
     return {
       status: 201,

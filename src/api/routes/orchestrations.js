@@ -42,7 +42,8 @@ router.post('/', async (req, res, next) => {
  */
 router.get('/:orchestrationId', async (req, res, next) => {
   const options = {
-    id: req.params.orchestrationId
+    id: req.params.orchestrationId,
+    resolveTriggers: req.query.resolveTriggers
   };
 
   try {

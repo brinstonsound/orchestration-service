@@ -68,7 +68,6 @@ module.exports.createOrchestration = async (options) => {
       id: newId,
       name: options.body.name,
       symphonyId: options.body.symphonyId,
-      actions: [], // Actions will be attached by the actions object
       triggers: [] // Triggers will be attached by the triggers object
     }
     // Save the new sound to disk
@@ -101,10 +100,24 @@ module.exports.getOrchestration = async (options) => {
     });
     let response;
     if (myOrchestration) {
-      // TODO:Look up the actions for this orchestration.  Attach them in the result.actions array.
-
-      // TODO:Look up the triggers for this orchestration.  Attach them in the result.triggers array.
-
+      //Look up the actions for this orchestration.  Attach them in the result.actions array.
+      const actions = require('./actions')
+      const lstActions = actions.lstActions
+      myOrchestration.actions = lstActions.filter(obj => {
+        return obj.orchestrationId == myOrchestration.id
+      })
+      if (options.resolveTriggers) {
+        //Look up the triggers for this orchestration.  Attach them in the result.triggers array.
+        const triggers = require('./triggers')
+        const lstTriggers = triggers.lstTriggers
+        const triggerIds = myOrchestration.triggers
+        myOrchestration.triggers = []
+        triggerIds.forEach(element => {
+          myOrchestration.triggers.push(lstTriggers.find(obj => {
+            return obj.id == element
+          }))
+        });
+      }
       response = {
         status: 200,
         data: myOrchestration
@@ -181,9 +194,19 @@ module.exports.deleteOrchestration = async (options) => {
   try {
     const theOrch = await this.getOrchestration(options)
     if (theOrch.data.id != undefined) {
-      // Found it. Kill it.
+      // Found it.
+      // Delete all actions associate with this orchestration
+      const actions = require('./actions')
+      const lstActions = actions.lstactions.filter((obj) => {
+        return obj.orchestrationId == theOrch.data.id;
+      })
+      lstActions.forEach(a => {
+        actions.deleteAction({
+          id: a.id
+        })
+      })
+      // Remove the orchestration from the collection
       lstOrchestrations = lstOrchestrations.filter((obj) => {
-        //console.log(`Obj Id: ${obj.id} options.id: ${options.id} Match:${obj.id != options.id}`)
         return obj.id != options.id;
       });
       fs.unlinkSync(path.resolve(orchestrationsFolder, `${options.id.toString()}.json`))
@@ -228,23 +251,18 @@ module.exports.execute = async (options) => {
       }
       setTimeout(() => {
         // Timeout has expired.  Execute all actions now.
-        const modActions = require('./actions')
-        const lstActions = modActions.lstActions
-        theOrch.data.actions.forEach(actionId => {
-          const objAction = lstActions.find(obj => {
-            return obj.id == actionId
-          })
-          console.log(`Action: ${objAction.name}`)
-          switch (objAction.type) {
+        theOrch.data.actions.forEach(action => {
+          console.log(`Action: ${action.name}`)
+          switch (action.type) {
           case 'SOUND':
             // Call the sound server
-            console.log(`Calling the Sound Server with Sound ${JSON.stringify(objAction.sound)} *** NOT IMPLEMENTED YET ***`)
+            console.log(`Calling the Sound Server with Sound ${JSON.stringify(action.sound)} *** NOT IMPLEMENTED YET ***`)
             break
           case 'ORCHESTRATION':
             // Call another orchestration
-            console.log(`Chaining to orchestration ${objAction.orchestrationId}`)
+            console.log(`Chaining to orchestration ${action.nextOrchestrationId}`)
             this.execute({
-              id: objAction.orchestrationId
+              id: action.nextOrchestrationId
             })
             break
           }
@@ -266,3 +284,63 @@ module.exports.execute = async (options) => {
     };
   }
 };
+
+// /**
+//  * @param {Object} options
+//  * @throws {Error}
+//  * @return {Promise}
+//  */
+// module.exports.addTrigger = async (options) => {
+//   /* Expects:
+//     options.body.orchestrationId,
+//     options.body.triggerId
+//   */
+//   try {
+//     // Get the orchestration
+//     const orch = await this.getOrchestration({
+//       id: options.body.orchestrationId
+//     }, true)
+//     if (!orch.triggers.find(obj => {return obj == options.body.triggerId})) orch.triggers.push(options.body.triggerId)
+//     await this.updateOrchestration({id: options.body.orchestrationId, body:orch})
+//     return {
+//       status: 201,
+//       data: orch
+//     };
+//   } catch (err) {
+//     console.log(`addTrigger Error: ${err.message}`)
+//     return {
+//       status: 500,
+//       data: err.message
+//     };
+//   }
+// }
+
+// /**
+//  * @param {Object} options
+//  * @throws {Error}
+//  * @return {Promise}
+//  */
+// module.exports.removeTrigger = async (options) => {
+//   /* Expects:
+//     options.body.orchestrationId,
+//     options.body.triggerId
+//   */
+//   try {
+//     // Get the orchestration
+//     const orch = await this.getOrchestration({
+//       id: options.body.orchestrationId
+//     }, true)
+//     orch.triggers.filter(obj => {return obj != options.body.triggerId})
+//     await this.updateOrchestration({id: options.body.orchestrationId, body:orch})
+//     return {
+//       status: 200,
+//       data: orch
+//     };
+//   } catch (err) {
+//     console.log(`addTrigger Error: ${err.message}`)
+//     return {
+//       status: 500,
+//       data: err.message
+//     };
+//   }
+// }

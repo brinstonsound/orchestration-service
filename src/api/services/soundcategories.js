@@ -4,17 +4,20 @@
  * file called ./data/soundCategories.json
  */
 
+const config = require('../../../src/lib/config');
+const logger = require('../../../src/lib/logger');
+const log = logger(config.logger);
 const soundCategoriesFile = './data/soundCategories.json';
 let lstCategories
 loadCategories()
 
 function loadCategories () {
-  console.log('Loading Sound Categories from disk...')
+  log.debug('Loading Sound Categories from disk...')
   const fs = require('fs');
   if (fs.existsSync(soundCategoriesFile)) {
     lstCategories = JSON.parse(fs.readFileSync(soundCategoriesFile));
   } else {
-    console.log(`ERROR: Sound categories file not found at ${soundCategoriesFile}`)
+    log.debug(`ERROR: Sound categories file not found at ${soundCategoriesFile}`)
   }
 }
 
@@ -50,7 +53,7 @@ module.exports.findSoundCategories = async () => {
  */
 module.exports.createSoundCategory = async options => {
   try {
-    console.log(options);
+    log.debug(options);
     const d = new Date();
     const newId = d.getTime();
     const newCat = {
@@ -121,7 +124,7 @@ module.exports.getSoundcategorySounds = async options => {
       // Found the category. Now get its sounds
       const cSounds = require('./sounds')
       categorySounds = cSounds.lstSounds.filter(obj => {
-        console.log(`Obj soundCategoryId: ${obj.soundCategoryId} cat.id: ${cat.id} Match:${obj.soundCategoryId == cat.id}`)
+        log.debug(`Obj soundCategoryId: ${obj.soundCategoryId} cat.id: ${cat.id} Match:${obj.soundCategoryId == cat.id}`)
         return obj.soundCategoryId == cat.id;
       });
       response = {

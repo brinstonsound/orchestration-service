@@ -2,12 +2,15 @@
 const actionsFolder = './data/actions/';
 const fs = require('fs');
 const path = require('path');
+const config = require('../../../src/lib/config');
+const logger = require('../../../src/lib/logger');
+const log = logger(config.logger);
 
 let lstActions;
 loadActionList()
 
 function loadActionList () {
-  console.log('Loading all Actions from disk...')
+  log.debug('Loading all Actions from disk...')
   if (fs.existsSync(actionsFolder)) {
     const files = fs.readdirSync(actionsFolder);
     lstActions = [];
@@ -132,7 +135,6 @@ module.exports.getAction = async (options) => {
   try {
     // Look for the sound in the array
     const result = lstActions.find(obj => {
-      //console.log(`Obj Id: ${obj.id} options.id: ${options.id} Match:${obj.id == options.id}`)
       return obj.id == options.id;
     });
     let response;
@@ -227,7 +229,6 @@ module.exports.deleteAction = async (options) => {
     if (theAction.data.id != undefined) {
       // Found it. Kill it.
       lstActions = lstActions.filter((obj) => {
-        //console.log(`Obj Id: ${obj.id} options.id: ${options.id} Match:${obj.id != options.id}`)
         return obj.id != options.id;
       });
       fs.unlinkSync(path.resolve(actionsFolder, `${options.id.toString()}.json`))

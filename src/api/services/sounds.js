@@ -2,12 +2,15 @@
 const soundsFolder = './data/sounds/';
 const fs = require('fs');
 const path = require('path');
+const config = require('../../../src/lib/config');
+const logger = require('../../../src/lib/logger');
+const log = logger(config.logger);
 
 let lstSounds;
 loadSoundList()
 
 function loadSoundList () {
-  console.log('Loading all Sounds from disk...')
+  log.debug('Loading all Sounds from disk...')
   if (fs.existsSync(soundsFolder)) {
     const soundFiles = fs.readdirSync(soundsFolder);
     lstSounds = [];
@@ -15,7 +18,7 @@ function loadSoundList () {
       lstSounds.push(JSON.parse(fs.readFileSync(path.resolve(soundsFolder, file))));
     });
   } else {
-    console.log(`ERROR: No sounds found at ${soundsFolder}`)
+    log.debug(`ERROR: No sounds found at ${soundsFolder}`)
   }
 }
 module.exports.lstSounds = lstSounds
@@ -91,7 +94,7 @@ module.exports.getSound = async (options) => {
   try {
     // Look for the sound in the array
     const result = lstSounds.find(obj => {
-      //console.log(`Obj Id: ${obj.id} options.id: ${options.id} Match:${obj.id == options.id}`)
+      //log.debug(`Obj Id: ${obj.id} options.id: ${options.id} Match:${obj.id == options.id}`)
       return obj.id == options.id;
     });
     let response;
@@ -170,7 +173,7 @@ module.exports.deleteSound = async (options) => {
     if (theSound.data.id != undefined) {
       // Found it. Kill it.
       lstSounds = lstSounds.filter((obj) => {
-        //console.log(`Obj Id: ${obj.id} options.id: ${options.id} Match:${obj.id != options.id}`)
+        //log.debug(`Obj Id: ${obj.id} options.id: ${options.id} Match:${obj.id != options.id}`)
         return obj.id != options.id;
       });
       fs.unlinkSync(path.resolve(soundsFolder, `${options.id.toString()}.json`))

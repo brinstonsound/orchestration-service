@@ -2,6 +2,9 @@
 const triggersFolder = './data/triggers/';
 const fs = require('fs');
 const path = require('path');
+const config = require('../../../src/lib/config');
+const logger = require('../../../src/lib/logger');
+const log = logger(config.logger);
 const settings = require('../../lib/appSettings')
 const symphonies = require('./symphonies')
 const orchestrations = require('./orchestrations')
@@ -10,7 +13,7 @@ let lstTriggers;
 loadTriggerList()
 
 function loadTriggerList () {
-  console.log('Loading all Triggers from disk...')
+  log.debug('Loading all Triggers from disk...')
   if (fs.existsSync(triggersFolder)) {
     const files = fs.readdirSync(triggersFolder);
     lstTriggers = [];
@@ -19,7 +22,7 @@ function loadTriggerList () {
     });
   }
   // else {
-  //   console.log(`ERROR: No triggers found at ${triggersFolder}`)
+  //   log.debug(`ERROR: No triggers found at ${triggersFolder}`)
   // }
 }
 module.exports.lstTriggers = lstTriggers
@@ -140,7 +143,7 @@ module.exports.getTrigger = async (options) => {
   try {
     // Look for the sound in the array
     const result = lstTriggers.find(obj => {
-      //console.log(`Obj Id: ${obj.id} options.id: ${options.id} Match:${obj.id == options.id}`)
+      //log.debug(`Obj Id: ${obj.id} options.id: ${options.id} Match:${obj.id == options.id}`)
       return obj.id == options.id;
     });
     let response;
@@ -213,7 +216,7 @@ module.exports.deleteTrigger = async (options) => {
     if (theTrigger.data.id != undefined) {
       // Found it. Kill it.
       lstTriggers = lstTriggers.filter((obj) => {
-        //console.log(`Obj Id: ${obj.id} options.id: ${options.id} Match:${obj.id != options.id}`)
+        //log.debug(`Obj Id: ${obj.id} options.id: ${options.id} Match:${obj.id != options.id}`)
         return obj.id != options.id;
       });
       fs.unlinkSync(path.resolve(triggersFolder, `${options.id.toString()}.json`))
@@ -251,7 +254,7 @@ module.exports.fire = async (options) => {
       symphony.data.orchestrations.forEach(orch => {
         if (orch.triggers) {
           const match = orch.triggers.find(obj => {
-          //console.log(`Obj Id: ${obj} options.id: ${options.id} Match:${obj == options.id}`)
+          //log.debug(`Obj Id: ${obj} options.id: ${options.id} Match:${obj == options.id}`)
             return obj == options.id;
           });
           if (match) {
@@ -272,7 +275,7 @@ module.exports.fire = async (options) => {
       data: 'Item not found'
     };
   } catch (err) {
-    console.log(`Trigger.Fire Error: ${err.message}`)
+    log.debug(`Trigger.Fire Error: ${err.message}`)
     return {
       status: 500,
       data: err.message

@@ -2,12 +2,15 @@
 const orchestrationsFolder = './data/orchestrations/';
 const fs = require('fs');
 const path = require('path');
+const config = require('../../../src/lib/config');
+const logger = require('../../../src/lib/logger');
+const log = logger(config.logger);
 
 let lstOrchestrations;
 loadOrchestrations()
 
 function loadOrchestrations () {
-  console.log('Loading all Orchestrations from disk...')
+  log.debug('Loading all Orchestrations from disk...')
   if (fs.existsSync(orchestrationsFolder)) {
     const files = fs.readdirSync(orchestrationsFolder);
     lstOrchestrations = [];
@@ -95,7 +98,7 @@ module.exports.getOrchestration = async (options) => {
   try {
     // Look for the item in the array
     const myOrchestration = lstOrchestrations.find(obj => {
-      //console.log(`Obj Id: ${obj.id} options.id: ${options.id} Match:${obj.id == options.id}`)
+      //log.debug(`Obj Id: ${obj.id} options.id: ${options.id} Match:${obj.id == options.id}`)
       return obj.id == options.id;
     });
     let response;
@@ -237,9 +240,9 @@ module.exports.execute = async (options) => {
     const theOrch = await this.getOrchestration(options)
     if (theOrch.status == 200) {
       // Found it. Check for any actions.
-      console.log(`Executing orchestration ${theOrch.data.id} - ${theOrch.data.name} now...`)
+      log.debug(`Executing orchestration ${theOrch.data.id} - ${theOrch.data.name} now...`)
       if (theOrch.data.actions == undefined || theOrch.data.actions.length == 0) {
-        console.log(`Orchestration ${theOrch.data.id} - ${theOrch.data.name}: No actions to execute.`)
+        log.debug(`Orchestration ${theOrch.data.id} - ${theOrch.data.name}: No actions to execute.`)
         return {
           status: 400,
           data: 'No actions to execute.'
@@ -247,20 +250,20 @@ module.exports.execute = async (options) => {
       }
       if (theOrch.data.startDelay == undefined) theOrch.data.startDelay = 0 // Set a default start delay of 0 ms.
       if (theOrch.data.startDelay > 0) {
-        console.log(`Pausing for ${theOrch.data.startDelay} milliseconds...`)
+        log.debug(`Pausing for ${theOrch.data.startDelay} milliseconds...`)
       }
       setTimeout(() => {
         // Timeout has expired.  Execute all actions now.
         theOrch.data.actions.forEach(action => {
-          console.log(`Action: ${action.name}`)
+          log.debug(`Action: ${action.name}`)
           switch (action.type) {
           case 'SOUND':
             // Call the sound server
-            console.log(`Calling the Sound Server with Sound ${JSON.stringify(action.sound)} *** NOT IMPLEMENTED YET ***`)
+            log.debug(`Calling the Sound Server with Sound ${JSON.stringify(action.sound)} *** NOT IMPLEMENTED YET ***`)
             break
           case 'ORCHESTRATION':
             // Call another orchestration
-            console.log(`Chaining to orchestration ${action.nextOrchestrationId}`)
+            log.debug(`Chaining to orchestration ${action.nextOrchestrationId}`)
             this.execute({
               id: action.nextOrchestrationId
             })
@@ -277,7 +280,7 @@ module.exports.execute = async (options) => {
       data: 'Item not found'
     };
   } catch (err) {
-    console.log(`ORCH-EXECUTE Error: ${err.message}`)
+    log.debug(`ORCH-EXECUTE Error: ${err.message}`)
     return {
       status: 500,
       data: err.message
@@ -307,7 +310,7 @@ module.exports.execute = async (options) => {
 //       data: orch
 //     };
 //   } catch (err) {
-//     console.log(`addTrigger Error: ${err.message}`)
+//     log.debug(`addTrigger Error: ${err.message}`)
 //     return {
 //       status: 500,
 //       data: err.message
@@ -337,7 +340,7 @@ module.exports.execute = async (options) => {
 //       data: orch
 //     };
 //   } catch (err) {
-//     console.log(`addTrigger Error: ${err.message}`)
+//     log.debug(`addTrigger Error: ${err.message}`)
 //     return {
 //       status: 500,
 //       data: err.message

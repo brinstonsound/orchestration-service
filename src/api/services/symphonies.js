@@ -3,12 +3,15 @@ const symphoniesFolder = './data/symphonies/';
 const fs = require('fs');
 const path = require('path');
 const settings = require('../../lib/appSettings')
+const config = require('../../../src/lib/config');
+const logger = require('../../../src/lib/logger');
+const log = logger(config.logger);
 
 let lstSymphonies;
 loadSymphoniesList()
 
 function loadSymphoniesList () {
-  console.log('Loading all Symphonies from disk...')
+  log.debug('Loading all Symphonies from disk...')
   if (fs.existsSync(symphoniesFolder)) {
     const files = fs.readdirSync(symphoniesFolder);
     lstSymphonies = [];
@@ -106,7 +109,7 @@ module.exports.getSymphony = async (options) => {
   try {
     // Look for the item in the array
     const result = lstSymphonies.find(obj => {
-      //console.log(`Obj Id: ${obj.id} options.id: ${options.id} Match:${obj.id == options.id}`)
+      //log.debug(`Obj Id: ${obj.id} options.id: ${options.id} Match:${obj.id == options.id}`)
       return obj.id == options.id;
     });
     let response;
@@ -114,7 +117,7 @@ module.exports.getSymphony = async (options) => {
       // Load up this symphony's orchestrations
       const orchestrations = require('./orchestrations')
       const myOrchestrations = orchestrations.lstOrchestrations.filter((obj) => {
-        //console.log(`Obj symphonyId: ${obj.symphonyId} options.id: ${options.id} Match:${obj.symphonyId == options.id}`)
+        //log.debug(`Obj symphonyId: ${obj.symphonyId} options.id: ${options.id} Match:${obj.symphonyId == options.id}`)
         return obj.symphonyId == options.id;
       });
       result.orchestrations = myOrchestrations

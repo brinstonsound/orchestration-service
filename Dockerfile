@@ -3,8 +3,8 @@ FROM node:11
 WORKDIR /app
 COPY package.json /app
 RUN npm install
-COPY ./src /app
+COPY ./src /app/src
 COPY ./data /app/data
-COPY ./config /config
-CMD node ./bin/www
+COPY ./config /app/config
+CMD node ./src/bin/www
 EXPOSE 3000

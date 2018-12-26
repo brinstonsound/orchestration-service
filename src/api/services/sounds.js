@@ -66,7 +66,8 @@ module.exports.createSound = async (options) => {
     const newSound = {
       id: newId,
       name: options.body.name,
-      soundCategoryId: options.body.soundCategoryId,
+      description: options.body.description,
+      soundCategories: options.body.soundCategories,
       fileName: options.body.fileName
     }
     // Save the new sound to disk

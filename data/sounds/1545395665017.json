@@ -1,6 +1,7 @@
 {
     "id": 1545395665017,
     "name": "Ding Dong!",
-    "soundCategoryId": 1545358327641,
+    "description": "Another bell sound",
+    "soundCategories":[1545358327641,1545358327642],
     "fileName": "dingdong.wav"
 }

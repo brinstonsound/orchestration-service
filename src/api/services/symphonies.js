@@ -6,6 +6,7 @@ const settings = require('../../lib/appSettings')
 const config = require('../../../src/lib/config');
 const logger = require('../../../src/lib/logger');
 const log = logger(config.logger);
+const className = 'services/symphonies'
 
 let lstSymphonies;
 loadSymphoniesList()
@@ -47,6 +48,7 @@ module.exports.findSymphonies = async (options) => {
       data: lstSymphonies
     };
   } catch (err) {
+    log.error(`${className}:findSymphonies: ${err.message}`)
     return {
       status: 500,
       data: err.message
@@ -93,6 +95,7 @@ module.exports.createSymphony = async (options) => {
       data: newSymphony
     };
   } catch (err) {
+    log.error(`${className}:createSymphony: ${err.message}`)
     return {
       status: 500,
       data: err.message
@@ -133,6 +136,7 @@ module.exports.getSymphony = async (options) => {
     }
     return response;
   } catch (err) {
+    log.error(`${className}:getSymphony: ${err.message}`)
     return {
       status: 500,
       data: err.message
@@ -179,6 +183,7 @@ module.exports.updateSymphony = async (options) => {
       data: 'Item not found'
     };
   } catch (err) {
+    log.error(`${className}:updateSymphony: ${err.message}`)
     return {
       status: 500,
       data: err.message
@@ -226,6 +231,7 @@ module.exports.deleteSymphony = async (options) => {
       data: 'Item not found'
     };
   } catch (err) {
+    log.error(`${className}:deleteSymphony: ${err.message}`)
     return {
       status: 500,
       data: err.message

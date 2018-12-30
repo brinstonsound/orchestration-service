@@ -6,7 +6,7 @@ const config = require('../../../src/lib/config');
 const logger = require('../../../src/lib/logger');
 const log = logger(config.logger);
 const settings = require('../../lib/appSettings')
-
+const className = 'services/sounds'
 let lstSounds;
 loadSoundList()
 
@@ -19,7 +19,7 @@ function loadSoundList () {
       lstSounds.push(JSON.parse(fs.readFileSync(path.resolve(soundsFolder, file))));
     });
   } else {
-    log.debug(`ERROR: No sounds found at ${soundsFolder}`)
+    log.error(`ERROR: No sounds found at ${soundsFolder}`)
   }
 }
 module.exports.lstSounds = lstSounds
@@ -38,6 +38,7 @@ module.exports.findSounds = async () => {
       data: lstSounds
     };
   } catch (err) {
+    log.error(`${className}:findSounds: ${err.message}`)
     return {
       status: 500,
       data: err.message
@@ -53,18 +54,19 @@ module.exports.findSounds = async () => {
  */
 module.exports.createSound = async (options) => {
   try {
+    log.debug(JSON.stringify(options.body))
     // Check that the payload has all required elements
     if (options.body.name == undefined) return {
       status: 400,
       data: 'Required element <name> is missing.'
     };
-    if (options.body.soundFile == undefined) return {
+    if (options.body.file == undefined) return {
       status: 400,
       data: 'Sound file is missing.'
     };
     const d = new Date();
     const newId = d.getTime();
-    const soundFilePath = `${settings.getSetting('mediaFolder')}/${newId}${path.extname(options.body.soundFile.path)}`
+    const soundFilePath = `${settings.getSetting('mediaFolder')}/${newId}${path.extname(options.body.file.path)}`
     const newSound = {
       id: newId,
       name: options.body.name,
@@ -78,7 +80,7 @@ module.exports.createSound = async (options) => {
     lstSounds.push(newSound);
 
     // Save the wav file to the airhorn media folder
-    const tmpFile = options.body.soundFile.path
+    const tmpFile = options.body.file.path
     fs.readFile(tmpFile, (err, data) => {
       //log.debug('Reading tmp file...')
       fs.writeFile(soundFilePath, data, (err) => {
@@ -96,7 +98,7 @@ module.exports.createSound = async (options) => {
       data: newSound
     };
   } catch (err) {
-    log.error(`Error creating sound: ${err.message}`)
+    log.error(`${className}:createSound: ${err.message}`)
     return {
       status: 500,
       data: err.message
@@ -130,6 +132,7 @@ module.exports.getSound = async (options) => {
     }
     return response;
   } catch (err) {
+    log.error(`${className}:getSound: ${err.message}`)
     return {
       status: 500,
       data: err.message
@@ -174,6 +177,7 @@ module.exports.updateSound = async (options) => {
       data: 'Item not found'
     };
   } catch (err) {
+    log.error(`${className}:updateSound: ${err.message}`)
     return {
       status: 500,
       data: err.message
@@ -205,6 +209,7 @@ module.exports.deleteSound = async (options) => {
       data: 'Item not found'
     };
   } catch (err) {
+    log.error(`${className}:deleteSound: ${err.message}`)
     return {
       status: 500,
       data: err.message

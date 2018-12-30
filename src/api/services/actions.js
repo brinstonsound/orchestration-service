@@ -5,6 +5,7 @@ const path = require('path');
 const config = require('../../../src/lib/config');
 const logger = require('../../../src/lib/logger');
 const log = logger(config.logger);
+const className = 'services/actions'
 
 let lstActions;
 loadActionList()
@@ -36,6 +37,7 @@ module.exports.findActions = async () => {
       data: lstActions
     };
   } catch (err) {
+    log.error(`${className}:findActions: ${err.message}`)
     return {
       status: 500,
       data: err.message
@@ -119,6 +121,7 @@ module.exports.createAction = async (options) => {
       data: newAction
     };
   } catch (err) {
+    log.error(`${className}:createAction: ${err.message}`)
     return {
       status: 500,
       data: err.message
@@ -151,6 +154,7 @@ module.exports.getAction = async (options) => {
     }
     return response;
   } catch (err) {
+    log.error(`${className}:getAction: ${err.message}`)
     return {
       status: 500,
       data: err.message
@@ -211,6 +215,7 @@ module.exports.updateAction = async (options) => {
       data: 'Item not found'
     };
   } catch (err) {
+    log.error(`${className}:updateAction: ${err.message}`)
     return {
       status: 500,
       data: err.message
@@ -241,6 +246,7 @@ module.exports.deleteAction = async (options) => {
       data: 'Item not found'
     };
   } catch (err) {
+    log.error(`${className}:deleteAction: ${err.message}`)
     return {
       status: 500,
       data: err.message

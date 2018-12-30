@@ -8,6 +8,7 @@ const config = require('../../../src/lib/config');
 const logger = require('../../../src/lib/logger');
 const log = logger(config.logger);
 const soundCategoriesFile = './data/soundCategories.json';
+const className = 'services/soundCategories'
 let lstCategories
 loadCategories()
 
@@ -38,6 +39,7 @@ module.exports.findSoundCategories = async () => {
       data: lstCategories
     };
   } catch (err) {
+    log.error(`${className}:findSoundCategories: ${err.message}`)
     return {
       status: 500,
       data: err.message
@@ -68,6 +70,7 @@ module.exports.createSoundCategory = async options => {
       data: newCat
     };
   } catch (err) {
+    log.error(`${className}:createSoundCategory: ${err.message}`)
     return {
       status: 500,
       data: err.message
@@ -100,6 +103,7 @@ module.exports.getSoundCategory = async options => {
     }
     return response;
   } catch (err) {
+    log.error(`${className}:getSoundCategory: ${err.message}`)
     return {
       status: 500,
       data: err.message
@@ -142,6 +146,7 @@ module.exports.getSoundcategorySounds = async options => {
     }
     return response;
   } catch (err) {
+    log.error(`${className}:getSoundcategorySounds: ${err.message}`)
     return {
       status: 500,
       data: err.message
@@ -179,6 +184,7 @@ module.exports.updateSoundCategory = async options => {
     }
     return response;
   } catch (err) {
+    log.error(`${className}:updateSoundCategory: ${err.message}`)
     return {
       status: 500,
       data: err.message
@@ -211,6 +217,7 @@ module.exports.deleteSoundCategory = async options => {
     }
     return response;
   } catch (err) {
+    log.error(`${className}:deleteSoundCategory: ${err.message}`)
     return {
       status: 500,
       data: err.message

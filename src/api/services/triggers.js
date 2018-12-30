@@ -8,6 +8,7 @@ const log = logger(config.logger);
 const settings = require('../../lib/appSettings')
 const symphonies = require('./symphonies')
 const orchestrations = require('./orchestrations')
+const className = 'services/triggers'
 
 let lstTriggers;
 loadTriggerList()
@@ -74,6 +75,7 @@ module.exports.findTriggers = async () => {
       data: lstTriggers
     };
   } catch (err) {
+    log.error(`${className}:findTriggers: ${err.message}`)
     return {
       status: 500,
       data: err.message
@@ -127,6 +129,7 @@ module.exports.createTrigger = async (options) => {
       data: newTrigger
     };
   } catch (err) {
+    log.error(`${className}:createTrigger: ${err.message}`)
     return {
       status: 500,
       data: err.message
@@ -160,6 +163,7 @@ module.exports.getTrigger = async (options) => {
     }
     return response;
   } catch (err) {
+    log.error(`${className}:getTrigger: ${err.message}`)
     return {
       status: 500,
       data: err.message
@@ -198,6 +202,7 @@ module.exports.updateTrigger = async (options) => {
       data: 'Item not found'
     };
   } catch (err) {
+    log.error(`${className}:updateTrigger: ${err.message}`)
     return {
       status: 500,
       data: err.message
@@ -229,6 +234,7 @@ module.exports.deleteTrigger = async (options) => {
       data: 'Item not found'
     };
   } catch (err) {
+    log.error(`${className}:deleteTrigger: ${err.message}`)
     return {
       status: 500,
       data: err.message
@@ -275,7 +281,7 @@ module.exports.fire = async (options) => {
       data: 'Item not found'
     };
   } catch (err) {
-    log.debug(`Trigger.Fire Error: ${err.message}`)
+    log.error(`${className}:fire: ${err.message}`)
     return {
       status: 500,
       data: err.message

@@ -5,6 +5,7 @@ const path = require('path');
 const config = require('../../../src/lib/config');
 const logger = require('../../../src/lib/logger');
 const log = logger(config.logger);
+const className = 'services/orchestrations'
 
 let lstOrchestrations;
 loadOrchestrations()
@@ -36,6 +37,7 @@ module.exports.findOrchestrations = async () => {
       data: lstOrchestrations
     };
   } catch (err) {
+    log.error(`${className}:findOrchestrations: ${err.message}`)
     return {
       status: 500,
       data: err.message
@@ -82,6 +84,7 @@ module.exports.createOrchestration = async (options) => {
       data: newOrch
     };
   } catch (err) {
+    log.error(`${className}:createOrchestration: ${err.message}`)
     return {
       status: 500,
       data: err.message
@@ -133,6 +136,7 @@ module.exports.getOrchestration = async (options) => {
     }
     return response;
   } catch (err) {
+    log.error(`${className}:getOrchestration: ${err.message}`)
     return {
       status: 500,
       data: err.message
@@ -181,6 +185,7 @@ module.exports.updateOrchestration = async (options) => {
       data: 'Item not found'
     };
   } catch (err) {
+    log.error(`${className}:updateOrchestration: ${err.message}`)
     return {
       status: 500,
       data: err.message
@@ -222,6 +227,7 @@ module.exports.deleteOrchestration = async (options) => {
       data: 'Item not found'
     };
   } catch (err) {
+    log.error(`${className}:deleteOrchestration: ${err.message}`)
     return {
       status: 500,
       data: err.message
@@ -280,7 +286,7 @@ module.exports.execute = async (options) => {
       data: 'Item not found'
     };
   } catch (err) {
-    log.debug(`ORCH-EXECUTE Error: ${err.message}`)
+    log.error(`${className}:execute: ${err.message}`)
     return {
       status: 500,
       data: err.message

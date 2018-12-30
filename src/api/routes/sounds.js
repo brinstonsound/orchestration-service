@@ -1,5 +1,8 @@
 const express = require('express');
 const sounds = require('../services/sounds');
+const config = require('../../../src/lib/config');
+const logger = require('../../../src/lib/logger');
+const log = logger(config.logger);
 
 const router = new express.Router();
 
@@ -28,6 +31,7 @@ router.post('/', async (req, res, next) => {
   };
 
   try {
+    log.debug('Got a POST request!')
     const result = await sounds.createSound(options);
     res.status(result.status || 200).send(result.data);
   } catch (err) {

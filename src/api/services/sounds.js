@@ -5,6 +5,7 @@ const path = require('path');
 const config = require('../../../src/lib/config');
 const logger = require('../../../src/lib/logger');
 const log = logger(config.logger);
+const settings = require('../../lib/appSettings')
 
 let lstSounds;
 loadSoundList()
@@ -57,28 +58,45 @@ module.exports.createSound = async (options) => {
       status: 400,
       data: 'Required element <name> is missing.'
     };
-    if (options.body.fileName == undefined) return {
+    if (options.body.soundFile == undefined) return {
       status: 400,
-      data: 'Required element <fileName> is missing.'
+      data: 'Sound file is missing.'
     };
     const d = new Date();
     const newId = d.getTime();
+    const soundFilePath = `${settings.getSetting('mediaFolder')}/${newId}${path.extname(options.body.soundFile.path)}`
     const newSound = {
       id: newId,
       name: options.body.name,
       description: options.body.description,
       soundCategories: options.body.soundCategories,
-      fileName: options.body.fileName
+      fileName: soundFilePath
     }
     // Save the new sound to disk
     fs.writeFileSync(path.resolve(soundsFolder, `${newId.toString()}.json`), JSON.stringify(newSound, null, 4));
     // Save the new sound to the collection
     lstSounds.push(newSound);
+
+    // Save the wav file to the airhorn media folder
+    const tmpFile = options.body.soundFile.path
+    fs.readFile(tmpFile, (err, data) => {
+      //log.debug('Reading tmp file...')
+      fs.writeFile(soundFilePath, data, (err) => {
+        //log.debug('Writing new file...')
+        fs.unlink(tmpFile, () => {
+          //log.debug('Deleting tmp file...')
+          if (err) throw err;
+        })
+      })
+      if (err) throw err;
+    })
+    log.info(`Created new sound: ${soundFilePath}`)
     return {
       status: 201,
       data: newSound
     };
   } catch (err) {
+    log.error(`Error creating sound: ${err.message}`)
     return {
       status: 500,
       data: err.message

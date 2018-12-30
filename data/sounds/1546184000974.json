@@ -2,6 +2,6 @@
     "id": 1546184000974,
     "name": "abc",
     "description": "def",
-    "soundCategories": "1,1545358327641",
+    "soundCategories": [1,1545358327641],
     "fileName": "/home/marc/airhorn-media/1546184000974.mp3"
 }

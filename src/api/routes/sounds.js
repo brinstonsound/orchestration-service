@@ -31,7 +31,6 @@ router.post('/', async (req, res, next) => {
   };
 
   try {
-    log.debug('Got a POST request!')
     const result = await sounds.createSound(options);
     res.status(result.status || 200).send(result.data);
   } catch (err) {

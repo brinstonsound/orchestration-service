@@ -12,7 +12,7 @@ const className = 'services/soundCategories'
 let lstCategories
 loadCategories()
 
-function loadCategories () {
+function loadCategories() {
   log.debug('Loading Sound Categories from disk...')
   const fs = require('fs');
   if (fs.existsSync(soundCategoriesFile)) {
@@ -22,7 +22,7 @@ function loadCategories () {
   }
 }
 
-function saveCategories () {
+function saveCategories() {
   const fs = require('fs');
   fs.writeFileSync(soundCategoriesFile, JSON.stringify(lstCategories));
 }
@@ -127,10 +127,8 @@ module.exports.getSoundcategorySounds = async options => {
     if (cat) {
       // Found the category. Now get its sounds
       const cSounds = require('./sounds')
-      // Look for sounds with this categroy id in their list of categories
       categorySounds = cSounds.lstSounds.filter(obj => {
         return obj.soundCategories.find(obj2 => {
-          log.debug(`Obj2: ${obj2} cat.id: ${cat.id} Match:${obj2 == cat.id}`)
           return obj2 == cat.id
         })
       });

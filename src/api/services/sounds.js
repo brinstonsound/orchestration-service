@@ -54,7 +54,7 @@ module.exports.findSounds = async () => {
  */
 module.exports.createSound = async (options) => {
   try {
-    log.debug(JSON.stringify(options.body))
+    //log.debug(JSON.stringify(options.body))
     // Check that the payload has all required elements
     if (options.body.name == undefined) return {
       status: 400,
@@ -71,7 +71,7 @@ module.exports.createSound = async (options) => {
       id: newId,
       name: options.body.name,
       description: options.body.description,
-      soundCategories: options.body.soundCategories,
+      soundCategories: options.body.soundCategories.split(','),
       fileName: soundFilePath
     }
     // Save the new sound to disk

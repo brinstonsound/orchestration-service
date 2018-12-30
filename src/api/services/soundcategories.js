@@ -12,7 +12,7 @@ const className = 'services/soundCategories'
 let lstCategories
 loadCategories()
 
-function loadCategories() {
+function loadCategories () {
   log.debug('Loading Sound Categories from disk...')
   const fs = require('fs');
   if (fs.existsSync(soundCategoriesFile)) {
@@ -22,7 +22,7 @@ function loadCategories() {
   }
 }
 
-function saveCategories() {
+function saveCategories () {
   const fs = require('fs');
   fs.writeFileSync(soundCategoriesFile, JSON.stringify(lstCategories));
 }

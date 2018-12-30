@@ -1,16 +1,15 @@
 const express = require('express');
 const sounds = require('../services/sounds');
-const config = require('../../../src/lib/config');
-const logger = require('../../../src/lib/logger');
-const log = logger(config.logger);
+// const config = require('../../../src/lib/config');
+// const logger = require('../../../src/lib/logger');
+// const log = logger(config.logger);
 
 const router = new express.Router();
 
 /**
  * List all Sounds
  */
-router.get('/', async (req, res, next) => {
-
+router.get ('/', async (req, res, next) => {
   try {
     const result = await sounds.findSounds();
     res.status(result.status || 200).send(result.data);

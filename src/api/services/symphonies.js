@@ -33,12 +33,12 @@ module.exports.findSymphonies = async (options) => {
     if (lstSymphonies === undefined) loadSymphoniesList();
     if (options != undefined) {
       if (options.active == 'true') {
-        const result = await this.getSymphony({
-          id: settings.activeSymphony
+        const result = lstSymphonies.find(sym => {
+          return sym.isActive == true
         })
         return {
           status: 200,
-          data: result.data
+          data: result
         };
       }
     }
@@ -79,15 +79,22 @@ module.exports.createSymphony = async (options) => {
       name: options.body.name,
       isActive: options.body.isActive
     }
+    if (newSymphony.isActive) {
+      log.debug(`Setting active symphony to ${newId}`)
+      // Update all symphonies, setting isActive to false
+      lstSymphonies.forEach(symphony => {
+        symphony.isActive = false
+        fs.writeFileSync(path.resolve(symphoniesFolder, `${symphony.id.toString()}.json`), JSON.stringify(symphony, null, 2));
+      })
+    }
     // Save the new symphony to disk
     fs.writeFileSync(path.resolve(symphoniesFolder, `${newId.toString()}.json`), JSON.stringify(newSymphony, null, 2));
+
+    // Reload all symphonies
+    loadSymphoniesList()
+
     // Save the new symphony to the collection
-    lstSymphonies.push(newSymphony);
-
-    if (newSymphony.isActive) {
-      settings.updateSetting('activeSymphony', newId)
-    }
-
+    // lstSymphonies.push(newSymphony);
     return {
       status: 201,
       data: newSymphony
@@ -160,18 +167,24 @@ module.exports.updateSymphony = async (options) => {
     let theSymphony = await this.getSymphony(options)
     if (theSymphony.data.id != undefined) {
       theSymphony = options.body
+      if (theSymphony.isActive) {
+        log.debug(`Setting active symphony to ${options.id}`)
+        // Update all symphonies, setting isActive to false
+        await lstSymphonies.forEach(symphony => {
+          symphony.isActive = false
+          fs.writeFileSync(path.resolve(symphoniesFolder, `${symphony.id.toString()}.json`), JSON.stringify(symphony, null, 2));
+        })
+      }
       theSymphony.id = options.id // Just to make sure we update the right object
       // Update the file
-      fs.writeFileSync(path.resolve(symphoniesFolder, `${options.id.toString()}.json`), JSON.stringify(theSymphony, null, 2));
-      // Update the collection
-      const foundIndex = lstSymphonies.findIndex(x => x.id == options.id)
-      lstSymphonies[foundIndex] = theSymphony
+      await fs.writeFileSync(path.resolve(symphoniesFolder, `${options.id.toString()}.json`), JSON.stringify(theSymphony, null, 2));
 
-      if (theSymphony.isActive) {
-        log.debug(`Setting active symphony to ${  options.id}`)
-        settings.updateSetting('activeSymphony', options.id)
-      }
+      // Reload all symphonies
+      loadSymphoniesList()
 
+      // // Update the collection
+      // const foundIndex = lstSymphonies.findIndex(x => x.id == options.id)
+      // lstSymphonies[foundIndex] = theSymphony
       return {
         status: 200,
         data: theSymphony

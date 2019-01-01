@@ -55,7 +55,7 @@ module.exports.findSoundCategories = async () => {
  */
 module.exports.createSoundCategory = async options => {
   try {
-    log.debug(options);
+    log.debug(`${className}:createSoundCategory: Options = ${JSON.stringify(options)}`)
     const d = new Date();
     const newId = d.getTime();
     const newCat = {
@@ -127,7 +127,8 @@ module.exports.getSoundcategorySounds = async options => {
     if (cat) {
       // Found the category. Now get its sounds
       const cSounds = require('./sounds')
-      categorySounds = cSounds.lstSounds.filter(obj => {
+      //log.debug(JSON.stringify(cSounds.lstSounds))
+      categorySounds = cSounds.lstSounds(true).filter(obj => {
         return obj.soundCategories.find(obj2 => {
           return obj2 == cat.id
         })

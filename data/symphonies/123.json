@@ -1,4 +1,5 @@
 {
-  "id": 123,
-  "name": "non labore cillum exercitation"
+  "id": "123",
+  "name": "Symphony 123",
+  "isActive": true
 }

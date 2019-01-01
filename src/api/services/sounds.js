@@ -5,7 +5,7 @@ const path = require('path');
 const config = require('../../../src/lib/config');
 const logger = require('../../../src/lib/logger');
 const log = logger(config.logger);
-const settings = require('../../lib/appSettings')
+const settings = require('./appSettings')
 const className = 'services/sounds'
 let lstSounds;
 loadSoundList()
@@ -22,7 +22,12 @@ function loadSoundList () {
     log.error(`ERROR: No sounds found at ${soundsFolder}`)
   }
 }
-module.exports.lstSounds = lstSounds
+module.exports.lstSounds = (reload) => {
+  if (reload) {
+    loadSoundList()
+  }
+  return lstSounds
+}
 
 /**
  * @throws {Error}
@@ -66,7 +71,7 @@ module.exports.createSound = async (options) => {
     };
     const d = new Date();
     const newId = d.getTime();
-    const soundFilePath = `${settings.getSetting('mediaFolder')}/${newId}${path.extname(options.body.file.path)}`
+    const soundFilePath = `${settings.mediaFolder}/${newId}${path.extname(options.body.file.path)}`
     const newSound = {
       id: newId,
       name: options.body.name,
@@ -93,6 +98,9 @@ module.exports.createSound = async (options) => {
       if (err) throw err;
     })
     log.info(`Created new sound: ${soundFilePath}`)
+    // Reload sounds array
+    loadSoundList()
+
     return {
       status: 201,
       data: newSound
@@ -191,25 +199,30 @@ module.exports.updateSound = async (options) => {
  * @return {Promise}
  */
 module.exports.deleteSound = async (options) => {
+  log.debug(`${className}:deleteSound: Deleting sound ${options.id}`)
   try {
     const theSound = await this.getSound(options)
     if (theSound.data.id != undefined) {
       // Found it. Kill it.
-      lstSounds = lstSounds.filter((obj) => {
-        //log.debug(`Obj Id: ${obj.id} options.id: ${options.id} Match:${obj.id != options.id}`)
-        return obj.id != options.id;
-      });
+      // lstSounds = lstSounds.filter((obj) => {
+      //   //log.debug(`Obj Id: ${obj.id} options.id: ${options.id} Match:${obj.id != options.id}`)
+      //   return obj.id != options.id;
+      // });
       fs.unlinkSync(path.resolve(soundsFolder, `${options.id.toString()}.json`))
+      fs.unlinkSync(path.resolve(settings.getSetting('mediaFolder'), `${options.id.toString()}.wav`))
+      log.debug(`${className}:deleteSound: Sound ${options.id} deleted`)
+      loadSoundList()
       return {
         status: 200
       };
     }
+    log.debug(`${className}:deleteSound: Sound ${options.id} not found`)
     return {
       status: 404,
       data: 'Item not found'
     };
   } catch (err) {
-    log.error(`${className}:deleteSound: ${err.message}`)
+    log.error(`${className}:deleteSound: Error deleting sound ${options.id} - ${err.message}`)
     return {
       status: 500,
       data: err.message

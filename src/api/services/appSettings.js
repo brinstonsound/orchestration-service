@@ -1,10 +1,12 @@
-'use esversion: 6';
-const settingsFile = './data/appSettings.json';
-const fs = require('fs');
+//export const activeSymphony = 123
+//export const mediaFolder = '/home/marc/airhorn-media'
+module.exports.activeSymphony = getSetting('activeSymphony')
+module.exports.mediaFolder = getSetting('mediaFolder')
 
-const lstSettings = JSON.parse(fs.readFileSync(settingsFile))
-
-module.exports.getSetting = (settingName) => {
+function getSetting (settingName) {
+  const settingsFile = './src/api/services/appSettings.json';
+  const fs = require('fs');
+  const lstSettings = JSON.parse(fs.readFileSync(settingsFile))
   const result = lstSettings.find(obj => {
     return obj.name == settingName;
   });
@@ -15,6 +17,9 @@ module.exports.getSetting = (settingName) => {
 }
 
 module.exports.updateSetting = (settingName, newValue) => {
+  const settingsFile = './src/api/services/appSettings.json';
+  const fs = require('fs');
+  const lstSettings = JSON.parse(fs.readFileSync(settingsFile))
   // Look for the category in the array
   const setting = lstSettings.find(obj => {
     return obj.name == settingName;

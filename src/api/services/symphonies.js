@@ -2,7 +2,7 @@
 const symphoniesFolder = './data/symphonies/';
 const fs = require('fs');
 const path = require('path');
-const settings = require('../../lib/appSettings')
+const settings = require('./appSettings')
 const config = require('../../../src/lib/config');
 const logger = require('../../../src/lib/logger');
 const log = logger(config.logger);
@@ -33,9 +33,8 @@ module.exports.findSymphonies = async (options) => {
     if (lstSymphonies === undefined) loadSymphoniesList();
     if (options != undefined) {
       if (options.active == 'true') {
-        const activeSymphonyId = settings.getSetting('activeSymphony')
         const result = await this.getSymphony({
-          id: activeSymphonyId
+          id: settings.activeSymphony
         })
         return {
           status: 200,
@@ -80,13 +79,12 @@ module.exports.createSymphony = async (options) => {
       name: options.body.name,
       isActive: options.body.isActive
     }
-    // Save the new sound to disk
+    // Save the new symphony to disk
     fs.writeFileSync(path.resolve(symphoniesFolder, `${newId.toString()}.json`), JSON.stringify(newSymphony, null, 2));
-    // Save the new sound to the collection
+    // Save the new symphony to the collection
     lstSymphonies.push(newSymphony);
 
     if (newSymphony.isActive) {
-      const settings = require('./src/lib/appSettings')
       settings.updateSetting('activeSymphony', newId)
     }
 
@@ -151,6 +149,7 @@ module.exports.getSymphony = async (options) => {
  * @return {Promise}
  */
 module.exports.updateSymphony = async (options) => {
+  log.debug(`${className}:updateSymphony: ${JSON.stringify(options.body)}`)
   try {
     // Check that the payload has all required elements
     if (options.body.name == undefined) return {
@@ -169,7 +168,7 @@ module.exports.updateSymphony = async (options) => {
       lstSymphonies[foundIndex] = theSymphony
 
       if (theSymphony.isActive) {
-        const settings = require('./src/lib/appSettings')
+        log.debug(`Setting active symphony to ${  options.id}`)
         settings.updateSetting('activeSymphony', options.id)
       }
 

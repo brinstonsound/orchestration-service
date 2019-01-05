@@ -2,5 +2,8 @@
     "id": 1545654195319,
     "name": "Test orchestration 10",
     "symphonyId": 123,
+    "startDelayMin": 1,
+    "startDelayMax": 5,
+    "autoStart": false,
     "triggers": []
   }

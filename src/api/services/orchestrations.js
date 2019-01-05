@@ -66,13 +66,26 @@ module.exports.createOrchestration = async (options) => {
       status: 400,
       data: 'Element <symphonyId> must be an integer.'
     };
-
+    if (options.body.startDelayMin == undefined) options.body.startDelayMin = 0
+    if (!Number.isInteger(options.body.startDelayMin)) return {
+      status: 400,
+      data: 'Element <startDelayMin> must be an integer.'
+    };
+    if (options.body.startDelayMax == undefined) options.body.startDelayMax = 0
+    if (!Number.isInteger(options.body.startDelayMax)) return {
+      status: 400,
+      data: 'Element <startDelayMax> must be an integer.'
+    };
+    if (options.body.autoStart == undefined) options.body.autoStart = false
     const d = new Date();
     const newId = d.getTime();
     const newOrch = {
       id: newId,
       name: options.body.name,
       symphonyId: options.body.symphonyId,
+      startDelayMin: options.body.startDelayMin,
+      startDelayMax: options.body.startDelayMax,
+      autoStart: options.body.autoStart,
       triggers: [] // Triggers will be attached by the triggers object
     }
     // Save the new sound to disk

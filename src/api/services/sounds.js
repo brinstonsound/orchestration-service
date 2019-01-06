@@ -169,7 +169,7 @@ module.exports.updateSound = async (options) => {
     let theSound = await this.getSound(options)
     if (theSound.data.id != undefined) {
       theSound = options.body
-      theSound.id = options.id // Just to make sure we update the right object
+      theSound.id = Number.parseInt(options.id, 10) // Just to make sure we update the right object
       // Update the file
       fs.writeFileSync(path.resolve(soundsFolder, `${options.id.toString()}.json`), JSON.stringify(theSound, null, 4));
       // Update the collection

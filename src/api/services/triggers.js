@@ -186,7 +186,8 @@ module.exports.updateTrigger = async (options) => {
     let theTrigger = await this.getTrigger(options)
     if (theTrigger.data.id != undefined) {
       theTrigger = options.body
-      theTrigger.id = options.id // Just to make sure we update the right object
+      theTrigger.id = Number.parseInt(options.id, 10) // Just to make sure we update the right object
+
       // Update the file
       fs.writeFileSync(path.resolve(triggersFolder, `${options.id.toString()}.json`), JSON.stringify(theTrigger, null, 4));
       // Update the collection

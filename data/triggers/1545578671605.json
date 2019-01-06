@@ -1,7 +1,6 @@
 {
     "id": 1545578671605,
-    "name": "quis anim",
-    "type": "TIMER",
-    "timerIntervalMin": 10,
-    "timerIntervalMax": 20
+    "name": "Manual 1",
+    "type": "MANUAL",
+    "keyBinding": "1"
 }

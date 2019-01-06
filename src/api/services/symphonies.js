@@ -175,7 +175,8 @@ module.exports.updateSymphony = async (options) => {
           fs.writeFileSync(path.resolve(symphoniesFolder, `${symphony.id.toString()}.json`), JSON.stringify(symphony, null, 2));
         })
       }
-      theSymphony.id = options.id // Just to make sure we update the right object
+      theSymphony.id = Number.parseInt(options.id, 10) // Just to make sure we update the right object
+
       // Update the file
       await fs.writeFileSync(path.resolve(symphoniesFolder, `${options.id.toString()}.json`), JSON.stringify(theSymphony, null, 2));
 

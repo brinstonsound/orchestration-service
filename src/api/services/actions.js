@@ -199,7 +199,8 @@ module.exports.updateAction = async (options) => {
     let theAction = await this.getAction(options)
     if (theAction.data.id != undefined) {
       theAction = options.body
-      theAction.id = options.id // Just to make sure we update the right object
+      theAction.id = Number.parseInt(options.id, 10) // Just to make sure we update the right object
+
       // Update the file
       fs.writeFileSync(path.resolve(actionsFolder, `${options.id.toString()}.json`), JSON.stringify(theAction, null, 2));
       // Update the collection

@@ -182,7 +182,7 @@ module.exports.updateOrchestration = async (options) => {
     let theOrch = await this.getOrchestration(options)
     if (theOrch.data.id != undefined) {
       theOrch = options.body
-      theOrch.id = options.id // Just to make sure we update the right object
+      theOrch.id = Number.parseInt(options.id, 10) // Just to make sure we update the right object
       // Update the file
       fs.writeFileSync(path.resolve(orchestrationsFolder, `${options.id.toString()}.json`), JSON.stringify(theOrch, null, 4));
       // Update the collection

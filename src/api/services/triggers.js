@@ -68,6 +68,7 @@ function validate (objTrigger) {
  * @return {Promise}
  */
 module.exports.findTriggers = async () => {
+  log.trace(`${className}:findTriggers: Start`)
   try {
     if (lstTriggers === undefined) loadTriggerList();
     return {

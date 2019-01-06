@@ -6,7 +6,8 @@
     "startDelayMax": 10,
     "autoStart": false,
     "triggers": [
-        1545578731995
+        1545578731995,
+        1545578740539
     ],
     "actions": [
         {

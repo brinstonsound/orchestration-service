@@ -1,5 +1,81 @@
 {
   "id": "123",
   "name": "Symphony 123",
-  "isActive": true
+  "isActive": false,
+  "orchestrations": [
+    {
+      "id": 11111,
+      "name": "Test orchestration 1",
+      "symphonyId": 123,
+      "startDelayMin": 6,
+      "startDelayMax": 10,
+      "autoStart": false,
+      "triggers": [
+        1545578731995,
+        1545578740539
+      ],
+      "actions": [
+        {
+          "id": 1545496638462,
+          "orchestrationId": 11111,
+          "type": "SOUND",
+          "sound": {
+            "soundId": 1546314277836,
+            "volume": 0.429761,
+            "speakers": [
+              9,
+              6,
+              11,
+              2,
+              13
+            ]
+          }
+        },
+        {
+          "id": 1545497777,
+          "type": "ORCHESTRATION",
+          "orchestrationId": 11111,
+          "nextOrchestrationId": 22222
+        }
+      ]
+    },
+    {
+      "id": 1545654195319,
+      "name": "Test orchestration 10",
+      "symphonyId": 123,
+      "startDelayMin": 1,
+      "startDelayMax": 5,
+      "autoStart": false,
+      "triggers": [],
+      "actions": []
+    },
+    {
+      "id": 22222,
+      "name": "Test orchestration 2",
+      "symphonyId": 123,
+      "startDelayMin": 5,
+      "startDelayMax": 5,
+      "autoStart": false,
+      "triggers": [
+        1545578754821,
+        1545578834166,
+        1545578671605
+      ],
+      "actions": [
+        {
+          "id": 1545496666969,
+          "orchestrationId": 22222,
+          "type": "SOUND",
+          "sound": {
+            "soundId": 1546314277836,
+            "volume": 0.429761,
+            "speakers": [
+              1,
+              13
+            ]
+          }
+        }
+      ]
+    }
+  ]
 }

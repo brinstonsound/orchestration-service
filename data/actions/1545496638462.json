@@ -1,18 +1,10 @@
 {
-    "id": 1545496638462,
-    "name": "Ring da Bell",
-    "orchestrationId": 11111,
-    "type": "SOUND",
-    "sound": {
-        "soundId": 1545358498610,
-        "volume": 0.429761,
-        "speakers": [
-            9,
-            6,
-            11,
-            2,
-            13
-        ],
-        "loop": true
-    }
+  "id": 1545496638462,
+  "orchestrationId": 11111,
+  "type": "SOUND",
+  "sound": {
+    "soundId": 1546314277836,
+    "volume": 0.429761,
+    "speakers": [9, 6, 11, 2, 13]
+  }
 }

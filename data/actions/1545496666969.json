@@ -1,15 +1,10 @@
 {
-    "id": 1545496666969,
-    "name": "Ring da udder Bell",
-    "orchestrationId": 22222,
-    "type": "SOUND",
-    "sound": {
-        "soundId": 1545358498610,
-        "volume": 0.429761,
-        "speakers": [
-            1,
-            13
-        ],
-        "loop": false
-    }
+  "id": 1545496666969,
+  "orchestrationId": 22222,
+  "type": "SOUND",
+  "sound": {
+    "soundId": 1546314277836,
+    "volume": 0.429761,
+    "speakers": [1, 13]
+  }
 }

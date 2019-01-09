@@ -1,5 +1,17 @@
 {
   "id": 456,
   "name": "Symphony 456",
-  "isActive": true
+  "isActive": false,
+  "orchestrations": [
+    {
+      "id": 1546925395670,
+      "name": "Marc 1",
+      "symphonyId": 456,
+      "startDelayMin": 0,
+      "startDelayMax": 0,
+      "autoStart": true,
+      "triggers": [],
+      "actions": []
+    }
+  ]
 }

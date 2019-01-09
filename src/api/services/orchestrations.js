@@ -111,6 +111,7 @@ module.exports.createOrchestration = async (options) => {
  * @return {Promise}
  */
 module.exports.getOrchestration = async (options) => {
+  log.debug(`${className}:getOrchestration: Retrieving orchestration ${options.id}`)
   try {
     // Look for the item in the array
     const myOrchestration = lstOrchestrations.find(obj => {
@@ -213,10 +214,13 @@ module.exports.updateOrchestration = async (options) => {
  */
 module.exports.deleteOrchestration = async (options) => {
   try {
-    const theOrch = await this.getOrchestration(options)
+    log.debug(`${className}:deleteOrchestration: Deleting orchestration ${options.id}`)
+
+    const theOrch = await this.getOrchestration(options.id)
+    log.debug(`${className} - Found orchestration ${JSON.stringify(theOrch)}`)
     if (theOrch.data.id != undefined) {
       // Found it.
-      // Delete all actions associate with this orchestration
+      // Delete all actions associated with this orchestration
       const actions = require('./actions')
       const lstActions = actions.lstactions.filter((obj) => {
         return obj.orchestrationId == theOrch.data.id;
@@ -226,15 +230,15 @@ module.exports.deleteOrchestration = async (options) => {
           id: a.id
         })
       })
-      // Remove the orchestration from the collection
-      lstOrchestrations = lstOrchestrations.filter((obj) => {
-        return obj.id != options.id;
-      });
+      // Delete the orchestration file itself
       fs.unlinkSync(path.resolve(orchestrationsFolder, `${options.id.toString()}.json`))
+      // Reload orchestration list
+      loadOrchestrations()
       return {
         status: 200
       };
     }
+    log.error(`${className}:deleteOrchestration: Orchestration ${options.id} not found.`)
     return {
       status: 404,
       data: 'Item not found'

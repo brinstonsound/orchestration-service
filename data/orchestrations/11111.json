@@ -1,6 +1,6 @@
 {
     "id": 11111,
-    "name": "Test orchestration 1",
+    "name": "Test orchestration FOO",
     "symphonyId": 123,
     "startDelayMin": 6,
     "startDelayMax": 10,

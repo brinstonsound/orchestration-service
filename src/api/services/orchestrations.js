@@ -278,7 +278,7 @@ module.exports.execute = async (options) => {
       setTimeout(() => {
         // Timeout has expired.  Execute all actions now.
         theOrch.data.actions.forEach(action => {
-          log.debug(`Action: ${action.name}`)
+          log.debug(`Action: ${JSON.stringify(action)}`)
           switch (action.type) {
           case 'SOUND':
             // Call the sound server

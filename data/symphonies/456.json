@@ -10,8 +10,7 @@
       "startDelayMin": 0,
       "startDelayMax": 0,
       "autoStart": true,
-      "triggers": [],
-      "actions": []
+      "triggers": []
     }
   ]
 }

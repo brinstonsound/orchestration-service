@@ -4,19 +4,19 @@
     "symphonyId": 123,
     "startDelayMin": 6,
     "startDelayMax": 10,
-    "autoStart": false,
+    "autoStart": true,
     "triggers": [
         1545578731995,
-        1545578740539
+        1545578740539,
+        101
     ],
     "actions": [
         {
             "id": 1545496638462,
-            "name": "Ring da Bell",
             "orchestrationId": 11111,
             "type": "SOUND",
             "sound": {
-                "soundId": 1545358498610,
+                "soundId": 1546314277836,
                 "volume": 0.429761,
                 "speakers": [
                     9,
@@ -24,13 +24,11 @@
                     11,
                     2,
                     13
-                ],
-                "loop": true
+                ]
             }
         },
         {
             "id": 1545497777,
-            "name": "Call orchestration #2",
             "type": "ORCHESTRATION",
             "orchestrationId": 11111,
             "nextOrchestrationId": 22222

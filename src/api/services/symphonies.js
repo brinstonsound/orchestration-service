@@ -32,7 +32,7 @@ module.exports.findSymphonies = async (options) => {
   try {
     if (lstSymphonies === undefined) loadSymphoniesList();
     if (options != undefined) {
-      if (options.active == 'true') {
+      if (options.active == 'true' || options.active == true) {
         const result = lstSymphonies.find(sym => {
           return sym.isActive == true
         })

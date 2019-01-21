@@ -115,4 +115,34 @@ router.post('/:orchestrationId/execute', async (req, res, next) => {
   }
 });
 
+/**
+ * Start all ambient orchestrations
+ */
+router.post('/ambient/start', async (req, res, next) => {
+  try {
+    const result = await orchestrations.startAmbient();
+    res.status(result.status || 200).send(result.data);
+  } catch (err) {
+    return res.status(err.status).send({
+      status: err.status,
+      error: err.error
+    });
+  }
+});
+
+/**
+ * Stop all ambient orchestrations
+ */
+router.post('/ambient/stop', async (req, res, next) => {
+  try {
+    const result = await orchestrations.stopAmbient();
+    res.status(result.status || 200).send(result.data);
+  } catch (err) {
+    return res.status(err.status).send({
+      status: err.status,
+      error: err.error
+    });
+  }
+});
+
 module.exports = router;

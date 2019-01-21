@@ -1,5 +1,3 @@
-//export const activeSymphony = 123
-//export const mediaFolder = '/home/marc/airhorn-media'
 module.exports.activeSymphony = getSetting('activeSymphony')
 module.exports.mediaFolder = getSetting('mediaFolder')
 
@@ -31,6 +29,6 @@ module.exports.updateSetting = (settingName, newValue) => {
     const foundIndex = lstSettings.findIndex(x => x.name === settingName)
     lstSettings[foundIndex] = setting
     const fs = require('fs');
-    fs.writeFileSync(settingsFile, JSON.stringify(lstSettings));
+    fs.writeFileSync(settingsFile, JSON.stringify(lstSettings, 4));
   }
 }

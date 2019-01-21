@@ -1,23 +1,24 @@
-'use esversion: 6';
-const orchestrationsFolder = './data/orchestrations/';
-const fs = require('fs');
-const path = require('path');
-const config = require('../../../src/lib/config');
-const logger = require('../../../src/lib/logger');
-const log = logger(config.logger);
+'use esversion: 6'
+const orchestrationsFolder = './data/orchestrations/'
+const fs = require('fs')
+const path = require('path')
+const config = require('../../../src/lib/config')
+const logger = require('../../../src/lib/logger')
+const appSettings = require('./appSettings')
+const log = logger(config.logger)
 const className = 'services/orchestrations'
 
-let lstOrchestrations;
+let lstOrchestrations
 loadOrchestrations()
 
 function loadOrchestrations () {
   log.debug('Loading all Orchestrations from disk...')
   if (fs.existsSync(orchestrationsFolder)) {
-    const files = fs.readdirSync(orchestrationsFolder);
-    lstOrchestrations = [];
+    const files = fs.readdirSync(orchestrationsFolder)
+    lstOrchestrations = []
     files.forEach(file => {
-      lstOrchestrations.push(JSON.parse(fs.readFileSync(path.resolve(orchestrationsFolder, file))));
-    });
+      lstOrchestrations.push(JSON.parse(fs.readFileSync(path.resolve(orchestrationsFolder, file))))
+    })
   }
 }
 module.exports.lstOrchestrations = lstOrchestrations
@@ -30,20 +31,20 @@ module.exports.lstOrchestrations = lstOrchestrations
 module.exports.findOrchestrations = async () => {
   // List all Orchestrations.
   try {
-    if (lstOrchestrations === undefined) loadOrchestrations();
+    if (lstOrchestrations === undefined) loadOrchestrations()
 
     return {
       status: 200,
       data: lstOrchestrations
-    };
+    }
   } catch (err) {
     log.error(`${className}:findOrchestrations: ${err.message}`)
     return {
       status: 500,
       data: err.message
-    };
+    }
   }
-};
+}
 
 /**
  * @param {Object} options
@@ -57,28 +58,28 @@ module.exports.createOrchestration = async (options) => {
     if (options.body.name == undefined) return {
       status: 400,
       data: 'Required element <name> is missing.'
-    };
+    }
     if (options.body.symphonyId == undefined) return {
       status: 400,
       data: 'Required element <symphonyId> is missing.'
-    };
+    }
     if (!Number.isInteger(options.body.symphonyId)) return {
       status: 400,
       data: 'Element <symphonyId> must be an integer.'
-    };
+    }
     if (options.body.startDelayMin == undefined) options.body.startDelayMin = 0
     if (!Number.isInteger(options.body.startDelayMin)) return {
       status: 400,
       data: 'Element <startDelayMin> must be an integer.'
-    };
+    }
     if (options.body.startDelayMax == undefined) options.body.startDelayMax = 0
     if (!Number.isInteger(options.body.startDelayMax)) return {
       status: 400,
       data: 'Element <startDelayMax> must be an integer.'
-    };
+    }
     if (options.body.autoStart == undefined) options.body.autoStart = false
-    const d = new Date();
-    const newId = d.getTime();
+    const d = new Date()
+    const newId = d.getTime()
     const newOrch = {
       id: newId,
       name: options.body.name,
@@ -89,21 +90,21 @@ module.exports.createOrchestration = async (options) => {
       triggers: [] // Triggers will be attached by the triggers object
     }
     // Save the new sound to disk
-    fs.writeFileSync(path.resolve(orchestrationsFolder, `${newId.toString()}.json`), JSON.stringify(newOrch, null, 4));
+    fs.writeFileSync(path.resolve(orchestrationsFolder, `${newId.toString()}.json`), JSON.stringify(newOrch, null, 4))
     // Save the new sound to the collection
-    lstOrchestrations.push(newOrch);
+    lstOrchestrations.push(newOrch)
     return {
       status: 201,
       data: newOrch
-    };
+    }
   } catch (err) {
     log.error(`${className}:createOrchestration: ${err.message}`)
     return {
       status: 500,
       data: err.message
-    };
+    }
   }
-};
+}
 
 /**
  * @param {Object} options
@@ -116,9 +117,9 @@ module.exports.getOrchestration = async (options) => {
     // Look for the item in the array
     const myOrchestration = lstOrchestrations.find(obj => {
       //log.debug(`Obj Id: ${obj.id} options.id: ${options.id} Match:${obj.id == options.id}`)
-      return obj.id == options.id;
-    });
-    let response;
+      return obj.id == options.id
+    })
+    let response
     if (myOrchestration) {
       //Look up the actions for this orchestration.  Attach them in the result.actions array.
       const actions = require('./actions')
@@ -136,27 +137,27 @@ module.exports.getOrchestration = async (options) => {
           myOrchestration.triggers.push(lstTriggers.find(obj => {
             return obj.id == element
           }))
-        });
+        })
       }
       response = {
         status: 200,
         data: myOrchestration
-      };
+      }
     } else {
       response = {
         status: 404,
         data: 'Item not found'
-      };
+      }
     }
-    return response;
+    return response
   } catch (err) {
     log.error(`${className}:getOrchestration: ${err.message}`)
     return {
       status: 500,
       data: err.message
-    };
+    }
   }
-};
+}
 
 /**
  * @param {Object} options
@@ -170,42 +171,42 @@ module.exports.updateOrchestration = async (options) => {
     if (options.body.name == undefined) return {
       status: 400,
       data: 'Required element <name> is missing.'
-    };
+    }
     if (options.body.symphonyId == undefined) return {
       status: 400,
       data: 'Required element <symphonyId> is missing.'
-    };
+    }
     if (!Number.isInteger(options.body.symphonyId)) return {
       status: 400,
       data: 'Element <symphonyId> must be an integer.'
-    };
+    }
     // Find the orch in the collection
     let theOrch = await this.getOrchestration(options)
     if (theOrch.data.id != undefined) {
       theOrch = options.body
       theOrch.id = Number.parseInt(options.id, 10) // Just to make sure we update the right object
       // Update the file
-      fs.writeFileSync(path.resolve(orchestrationsFolder, `${options.id.toString()}.json`), JSON.stringify(theOrch, null, 4));
+      fs.writeFileSync(path.resolve(orchestrationsFolder, `${options.id.toString()}.json`), JSON.stringify(theOrch, null, 4))
       // Update the collection
       const foundIndex = lstOrchestrations.findIndex(x => x.id == options.id)
       lstOrchestrations[foundIndex] = theOrch
       return {
         status: 200,
         data: theOrch
-      };
+      }
     }
     return {
       status: 404,
       data: 'Item not found'
-    };
+    }
   } catch (err) {
     log.error(`${className}:updateOrchestration: ${err.message}`)
     return {
       status: 500,
       data: err.message
-    };
+    }
   }
-};
+}
 
 /**
  * @param {Object} options
@@ -223,7 +224,7 @@ module.exports.deleteOrchestration = async (options) => {
       // Delete all actions associated with this orchestration
       const actions = require('./actions')
       const lstActions = actions.lstactions.filter((obj) => {
-        return obj.orchestrationId == theOrch.data.id;
+        return obj.orchestrationId == theOrch.data.id
       })
       lstActions.forEach(a => {
         actions.deleteAction({
@@ -236,21 +237,21 @@ module.exports.deleteOrchestration = async (options) => {
       loadOrchestrations()
       return {
         status: 200
-      };
+      }
     }
     log.error(`${className}:deleteOrchestration: Orchestration ${options.id} not found.`)
     return {
       status: 404,
       data: 'Item not found'
-    };
+    }
   } catch (err) {
     log.error(`${className}:deleteOrchestration: ${err.message}`)
     return {
       status: 500,
       data: err.message
-    };
+    }
   }
-};
+}
 
 /**
  * @param {Object} options
@@ -263,9 +264,9 @@ module.exports.execute = async (options) => {
     const theOrch = await this.getOrchestration(options)
     if (theOrch.status == 200) {
       // Found it. Check for any actions.
-      log.debug(`Executing orchestration ${theOrch.data.id} - ${theOrch.data.name} now...`)
+      log.info(`Executing orchestration ${theOrch.data.id} - ${theOrch.data.name} now...`)
       if (theOrch.data.actions == undefined || theOrch.data.actions.length == 0) {
-        log.debug(`Orchestration ${theOrch.data.id} - ${theOrch.data.name}: No actions to execute.`)
+        log.warn(`Orchestration ${theOrch.data.id} - ${theOrch.data.name}: No actions to execute.`)
         return {
           status: 400,
           data: 'No actions to execute.'
@@ -273,7 +274,7 @@ module.exports.execute = async (options) => {
       }
       if (theOrch.data.startDelay == undefined) theOrch.data.startDelay = 0 // Set a default start delay of 0 ms.
       if (theOrch.data.startDelay > 0) {
-        log.debug(`Pausing for ${theOrch.data.startDelay} milliseconds...`)
+        log.info(`Pausing for ${theOrch.data.startDelay} milliseconds...`)
       }
       setTimeout(() => {
         // Timeout has expired.  Execute all actions now.
@@ -282,9 +283,16 @@ module.exports.execute = async (options) => {
           switch (action.type) {
           case 'SOUND':
             // Call the sound server
-            log.debug(`Calling the Sound Server with Sound ${JSON.stringify(action.sound)} *** NOT IMPLEMENTED YET ***`)
+            log.info(`Calling the Sound Server with Sound ${JSON.stringify(action.sound)} *** NOT IMPLEMENTED YET ***`)
             break
           case 'ORCHESTRATION':
+            // Check to see if this is a self-referencing orchestration.
+            // If it is, then it's an 'ambient sound'.  Ambient sounds are
+            // controlled by a master switch, so check it before chaining back
+            // to yourself.
+            if (action.nextOrchestrationId == theOrch.id && appSettings.getSetting('playAmbientSounds') == false) {
+              break
+            }
             // Call another orchestration
             log.debug(`Chaining to orchestration ${action.nextOrchestrationId}`)
             this.execute({
@@ -293,80 +301,76 @@ module.exports.execute = async (options) => {
             break
           }
         })
-      }, theOrch.data.startDelay);
+      }, theOrch.data.startDelay)
       return {
         status: 200
-      };
+      }
     }
     return {
       status: 404,
       data: 'Item not found'
-    };
+    }
   } catch (err) {
     log.error(`${className}:execute: ${err.message}`)
     return {
       status: 500,
       data: err.message
-    };
+    }
   }
-};
+}
 
-// /**
-//  * @param {Object} options
-//  * @throws {Error}
-//  * @return {Promise}
-//  */
-// module.exports.addTrigger = async (options) => {
-//   /* Expects:
-//     options.body.orchestrationId,
-//     options.body.triggerId
-//   */
-//   try {
-//     // Get the orchestration
-//     const orch = await this.getOrchestration({
-//       id: options.body.orchestrationId
-//     }, true)
-//     if (!orch.triggers.find(obj => {return obj == options.body.triggerId})) orch.triggers.push(options.body.triggerId)
-//     await this.updateOrchestration({id: options.body.orchestrationId, body:orch})
-//     return {
-//       status: 201,
-//       data: orch
-//     };
-//   } catch (err) {
-//     log.debug(`addTrigger Error: ${err.message}`)
-//     return {
-//       status: 500,
-//       data: err.message
-//     };
-//   }
-// }
+/**
+ * @throws {Error}
+ * @return {Promise}
+ */
+module.exports.startAmbient = async () => {
+  log.info(`${className}:startAmbient: Starting all ambient sounds...`)
+  try {
+    // Set ambient sounds switch to true
+    appSettings.updateSetting('playAmbientSounds', true)
 
-// /**
-//  * @param {Object} options
-//  * @throws {Error}
-//  * @return {Promise}
-//  */
-// module.exports.removeTrigger = async (options) => {
-//   /* Expects:
-//     options.body.orchestrationId,
-//     options.body.triggerId
-//   */
-//   try {
-//     // Get the orchestration
-//     const orch = await this.getOrchestration({
-//       id: options.body.orchestrationId
-//     }, true)
-//     orch.triggers.filter(obj => {return obj != options.body.triggerId})
-//     await this.updateOrchestration({id: options.body.orchestrationId, body:orch})
-//     return {
-//       status: 200,
-//       data: orch
-//     };
-//   } catch (err) {
-//     log.debug(`addTrigger Error: ${err.message}`)
-//     return {
-//       status: 500,
-//       data: err.message
-//     };
-//   }
-// }
+    // Find all ambient (auto-start) orchestrations in the active symphony
+    const symphonies = require('./symphonies')
+    const symphonyResp = await symphonies.findSymphonies({
+      active: true
+    })
+    const symphony = await symphonies.getSymphony({id: symphonyResp.data.id})
+    symphony.data.orchestrations.forEach(orchestration => {
+      if (orchestration.autoStart) {
+        log.debug(`${className}:startAmbient: Starting orchestration ${orchestration.id}`)
+        this.execute({id: orchestration.id})
+      }
+    })
+    return {
+      status: 200
+    }
+  } catch (err) {
+    log.error(`${className}:startAmbient: ${err.message}`)
+    return {
+      status: 500,
+      data: err.message
+    }
+  }
+}
+
+/**
+ * @throws {Error}
+ * @return {Promise}
+ */
+module.exports.stopAmbient = async () => {
+  log.info(`${className}:stopAmbient: Stopping all ambient sounds...`)
+  try {
+    // Set ambient sounds switch to false.
+    // The currently playing sounds should drain out on their own.
+    appSettings.updateSetting('playAmbientSounds', false)
+    return {
+      status: 200
+    }
+  } catch (err) {
+    log.error(`${className}:stopAmbient: ${err.message}`)
+    return {
+      status: 500,
+      data: err.message
+    }
+  }
+}

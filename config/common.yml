@@ -8,8 +8,8 @@ defaults: &defaults
     levels:
       trace:
       debug: STDOUT
-      info:
-      warn:
+      info: STDOUT
+      warn: STDERR
       error: STDERR
       fatal:
 

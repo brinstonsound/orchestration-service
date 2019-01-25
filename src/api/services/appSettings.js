@@ -1,7 +1,8 @@
-module.exports.activeSymphony = getSetting('activeSymphony')
-module.exports.mediaFolder = getSetting('mediaFolder')
+// module.exports.activeSymphony = this.getSetting('activeSymphony')
+// module.exports.mediaFolder = this.getSetting('mediaFolder')
+// module.exports.playAmbientSounds = this.getSetting('playAmbientSounds')
 
-function getSetting (settingName) {
+module.exports.getSetting = (settingName) => {
   const settingsFile = './src/api/services/appSettings.json';
   const fs = require('fs');
   const lstSettings = JSON.parse(fs.readFileSync(settingsFile))
@@ -29,6 +30,6 @@ module.exports.updateSetting = (settingName, newValue) => {
     const foundIndex = lstSettings.findIndex(x => x.name === settingName)
     lstSettings[foundIndex] = setting
     const fs = require('fs');
-    fs.writeFileSync(settingsFile, JSON.stringify(lstSettings, 4));
+    fs.writeFileSync(settingsFile, JSON.stringify(lstSettings, null, 2));
   }
 }

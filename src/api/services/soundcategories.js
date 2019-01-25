@@ -4,9 +4,9 @@
  * file called ./data/soundCategories.json
  */
 
-const config = require('../../../src/lib/config');
-const logger = require('../../../src/lib/logger');
-const log = logger(config.logger);
+//const config = require('../../../src/lib/config');
+const log = require('../../../src/lib/airhornLogger');
+//const log = logger(config.logger);
 const soundCategoriesFile = './data/soundCategories.json';
 const className = 'services/soundCategories'
 let lstCategories

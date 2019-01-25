@@ -7,6 +7,16 @@ const bodyParser = require('body-parser');
 const config = require('../lib/config');
 const logger = require('../lib/logger');
 
+/**
+ * Start ambient orchestrations
+ */
+const orchestrationService = require('./services/orchestrations')
+const appSettings = require('./services/appSettings')
+if (appSettings.getSetting('playAmbientSounds') == true) {
+  orchestrationService.startAmbient()
+}
+
+// Set up Express
 const log = logger(config.logger);
 const app = express();
 
@@ -45,6 +55,8 @@ app.use('/sounds', require('./routes/sounds'));
 app.use('/triggers', require('./routes/triggers'));
 app.use('/soundcategories', require('./routes/soundcategories'));
 app.use('/players', require('./routes/players'));
+app.use('/statusLogs', require('./routes/statusLogs'));
+app.use('/settings', require('./routes/settings'));
 
 // catch 404
 app.use((req, res, next) => {

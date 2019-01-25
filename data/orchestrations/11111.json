@@ -2,8 +2,8 @@
     "id": 11111,
     "name": "Test orchestration FOO",
     "symphonyId": 123,
-    "startDelayMin": 6,
-    "startDelayMax": 10,
+    "startDelayMin": 0,
+    "startDelayMax": 0,
     "autoStart": true,
     "triggers": [
         1545578731995,

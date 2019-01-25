@@ -2,9 +2,9 @@
 const soundsFolder = './data/sounds/';
 const fs = require('fs');
 const path = require('path');
-const config = require('../../../src/lib/config');
-const logger = require('../../../src/lib/logger');
-const log = logger(config.logger);
+//const config = require('../../../src/lib/config');
+const log = require('../../../src/lib/airhornLogger');
+//const log = logger(config.logger);
 const settings = require('./appSettings')
 const className = 'services/sounds'
 let lstSounds;
@@ -71,7 +71,7 @@ module.exports.createSound = async (options) => {
     };
     const d = new Date();
     const newId = d.getTime();
-    const soundFilePath = `${settings.mediaFolder}/${newId}${path.extname(options.body.file.path)}`
+    const soundFilePath = `${settings.getSetting('mediaFolder')}/${newId}${path.extname(options.body.file.path)}`
     const newSound = {
       id: newId,
       name: options.body.name,

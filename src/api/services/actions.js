@@ -1,17 +1,17 @@
-"use esversion: 6";
-const actionsFolder = "./data/actions/";
-const fs = require("fs");
-const path = require("path");
-const config = require("../../../src/lib/config");
-const logger = require("../../../src/lib/logger");
-const log = logger(config.logger);
-const className = "services/actions";
+'use esversion: 6';
+const actionsFolder = './data/actions/';
+const fs = require('fs');
+const path = require('path');
+//const config = require('../../../src/lib/config');
+const log = require('../../../src/lib/airhornLogger');
+//const log = logger(config.logger);
+const className = 'services/actions';
 
 let lstActions;
 loadActionList();
 
-function loadActionList() {
-  log.debug("Loading all Actions from disk...");
+function loadActionList () {
+  log.debug('Loading all Actions from disk...');
   if (fs.existsSync(actionsFolder)) {
     const files = fs.readdirSync(actionsFolder);
     lstActions = [];
@@ -59,38 +59,38 @@ module.exports.createAction = async options => {
     if (options.body.orchestrationId == undefined)
       return {
         status: 400,
-        data: "Required element <orchestrationId> is missing."
+        data: 'Required element <orchestrationId> is missing.'
       };
     if (options.body.type == undefined)
       return {
         status: 400,
-        data: "Required element <type> is missing."
+        data: 'Required element <type> is missing.'
       };
     switch (options.body.type) {
-      case "SOUND":
-        if (options.body.sound.soundId == undefined)
-          return {
-            status: 400,
-            data: "Required element <sound.soundId> is missing."
-          };
-        if (options.body.sound.volume == undefined)
-          return {
-            status: 400,
-            data: "Required element <sound.volume> is missing."
-          };
-        if (options.body.sound.speakers == undefined)
-          return {
-            status: 400,
-            data: "Required element <sound.speakers> is missing."
-          };
-        break;
-      case "ORCHESTRATION":
-        if (options.body.nextOrchestrationId == undefined)
-          return {
-            status: 400,
-            data: "Required element <nextOrchestrationId> is missing."
-          };
-        break;
+    case 'SOUND':
+      if (options.body.sound.soundId == undefined)
+        return {
+          status: 400,
+          data: 'Required element <sound.soundId> is missing.'
+        };
+      if (options.body.sound.volume == undefined)
+        return {
+          status: 400,
+          data: 'Required element <sound.volume> is missing.'
+        };
+      if (options.body.sound.speakers == undefined)
+        return {
+          status: 400,
+          data: 'Required element <sound.speakers> is missing.'
+        };
+      break;
+    case 'ORCHESTRATION':
+      if (options.body.nextOrchestrationId == undefined)
+        return {
+          status: 400,
+          data: 'Required element <nextOrchestrationId> is missing.'
+        };
+      break;
     }
 
     const d = new Date();
@@ -100,16 +100,16 @@ module.exports.createAction = async options => {
       orchestrationId: options.body.orchestrationId
     };
     switch (options.body.type) {
-      case "SOUND":
-        newAction.sound = {
-          soundId: options.body.sound.soundId,
-          volume: options.body.sound.volume,
-          speakers: options.body.sound.speakers
-        };
-        break;
-      case "ORCHESTRATION":
-        newAction.nextOrchestrationId = options.body.nextOrchestrationId;
-        break;
+    case 'SOUND':
+      newAction.sound = {
+        soundId: options.body.sound.soundId,
+        volume: options.body.sound.volume,
+        speakers: options.body.sound.speakers
+      };
+      break;
+    case 'ORCHESTRATION':
+      newAction.nextOrchestrationId = options.body.nextOrchestrationId;
+      break;
     }
     // Save the new action to disk
     fs.writeFileSync(
@@ -151,7 +151,7 @@ module.exports.getAction = async options => {
     } else {
       response = {
         status: 404,
-        data: "Item not found"
+        data: 'Item not found'
       };
     }
     return response;
@@ -176,36 +176,36 @@ module.exports.updateAction = async options => {
     if (options.body.orchestrationId == undefined)
       return {
         status: 400,
-        data: "Required element <orchestrationId> is missing."
+        data: 'Required element <orchestrationId> is missing.'
       };
     if (options.body.type == undefined)
       return {
         status: 400,
-        data: "Required element <type> is missing."
+        data: 'Required element <type> is missing.'
       };
     if (
-      options.body.type == "ORCHESTRATION" &&
+      options.body.type == 'ORCHESTRATION' &&
       options.body.orchestrationId == undefined
     )
       return {
         status: 400,
-        data: "Required element <orchestrationId> is missing."
+        data: 'Required element <orchestrationId> is missing.'
       };
-    if (options.body.type == "SOUND") {
+    if (options.body.type == 'SOUND') {
       if (options.body.sound.soundId == undefined)
         return {
           status: 400,
-          data: "Required element <sound.soundId> is missing."
+          data: 'Required element <sound.soundId> is missing.'
         };
       if (options.body.sound.volume == undefined)
         return {
           status: 400,
-          data: "Required element <sound.volume> is missing."
+          data: 'Required element <sound.volume> is missing.'
         };
       if (options.body.sound.speakers == undefined)
         return {
           status: 400,
-          data: "Required element <sound.speakers> is missing."
+          data: 'Required element <sound.speakers> is missing.'
         };
     }
     // Find the item in the collection
@@ -229,7 +229,7 @@ module.exports.updateAction = async options => {
     }
     return {
       status: 404,
-      data: "Item not found"
+      data: 'Item not found'
     };
   } catch (err) {
     log.error(`${className}:updateAction: ${err.message}`);
@@ -262,7 +262,7 @@ module.exports.deleteAction = async options => {
     }
     return {
       status: 404,
-      data: "Item not found"
+      data: 'Item not found'
     };
   } catch (err) {
     log.error(`${className}:deleteAction: ${err.message}`);

@@ -3,9 +3,9 @@ const symphoniesFolder = './data/symphonies/';
 const fs = require('fs');
 const path = require('path');
 const settings = require('./appSettings')
-const config = require('../../../src/lib/config');
-const logger = require('../../../src/lib/logger');
-const log = logger(config.logger);
+//const config = require('../../../src/lib/config');
+const log = require('../../../src/lib/airhornLogger');
+//const log = logger(config.logger);
 const className = 'services/symphonies'
 
 let lstSymphonies;

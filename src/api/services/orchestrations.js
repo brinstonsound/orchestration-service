@@ -2,10 +2,10 @@
 const orchestrationsFolder = './data/orchestrations/'
 const fs = require('fs')
 const path = require('path')
-const config = require('../../../src/lib/config')
-const logger = require('../../../src/lib/logger')
+//const config = require('../../../src/lib/config')
+const log = require('../../../src/lib/airhornLogger')
 const appSettings = require('./appSettings')
-const log = logger(config.logger)
+//const log = logger(config.logger)
 const className = 'services/orchestrations'
 
 let lstOrchestrations

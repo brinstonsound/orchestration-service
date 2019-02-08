@@ -1,6 +1,6 @@
 {
   "name": "airhorn-orchestration-api",
-  "description": "",
+  "description": "Airhorn Orchestration Server",
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {

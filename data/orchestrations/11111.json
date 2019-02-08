@@ -1,6 +1,6 @@
 {
     "id": 11111,
-    "name": "Test orchestration FOO",
+    "name": "Test orchestration 420",
     "symphonyId": 123,
     "startDelayMin": 0,
     "startDelayMax": 0,
@@ -8,7 +8,8 @@
     "triggers": [
         1545578731995,
         1545578740539,
-        101
+        101,
+        1545578748085
     ],
     "actions": [
         {
@@ -17,13 +18,11 @@
             "type": "SOUND",
             "sound": {
                 "soundId": 1546314277836,
-                "volume": 0.429761,
+                "volume": 38,
                 "speakers": [
                     9,
                     6,
-                    11,
-                    2,
-                    13
+                    11
                 ]
             }
         },

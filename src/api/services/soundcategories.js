@@ -118,6 +118,7 @@ module.exports.getSoundCategory = async options => {
  */
 module.exports.getSoundcategorySounds = async options => {
   try {
+    log.debug(`${className}:getSoundcategorySounds: Getting sounds for category ${options.id}`)
     // Look for the category in the array
     const cat = lstCategories.find(obj => {
       return obj.id == options.id;
@@ -125,6 +126,7 @@ module.exports.getSoundcategorySounds = async options => {
     let response
     let categorySounds = [];
     if (cat) {
+      // log.debug(`${className}:getSoundcategorySounds: Found category ${options.id}`)
       // Found the category. Now get its sounds
       const cSounds = require('./sounds')
       //log.debug(JSON.stringify(cSounds.lstSounds))
@@ -133,6 +135,7 @@ module.exports.getSoundcategorySounds = async options => {
           return obj2 == cat.id
         })
       });
+      // log.debug('Category Sounds: ' + JSON.stringify(categorySounds))
       response = {
         status: 200,
         data: categorySounds

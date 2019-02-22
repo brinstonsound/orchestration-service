@@ -54,42 +54,55 @@ module.exports.findActions = async () => {
  * @return {Promise}
  */
 module.exports.createAction = async options => {
+  log.debug(`Creating new Action: ${JSON.stringify(options.body)}`)
   try {
     // Check that the payload has all required elements
-    if (options.body.orchestrationId == undefined)
+    if (options.body.orchestrationId == undefined) {
+      log.warn('Required element <orchestrationId> is missing.')
       return {
         status: 400,
         data: 'Required element <orchestrationId> is missing.'
-      };
-    if (options.body.type == undefined)
+      }
+    }
+    if (options.body.type == undefined) {
+      log.warn('Required element <type> is missing.')
       return {
         status: 400,
         data: 'Required element <type> is missing.'
-      };
+      }
+    }
     switch (options.body.type) {
     case 'SOUND':
-      if (options.body.sound.soundId == undefined)
+      if (options.body.sound.soundId == undefined) {
+        log.warn('Required element <sound.soundId> is missing.')
         return {
           status: 400,
           data: 'Required element <sound.soundId> is missing.'
-        };
-      if (options.body.sound.volume == undefined)
+        }
+      }
+      if (options.body.sound.volume == undefined) {
+        log.warn('Required element <sound.volume> is missing.')
         return {
           status: 400,
           data: 'Required element <sound.volume> is missing.'
-        };
-      if (options.body.sound.speakers == undefined)
+        }
+      }
+      if (options.body.sound.speakers == undefined) {
+        log.warn('Required element <sound.speakers> is missing.')
         return {
           status: 400,
           data: 'Required element <sound.speakers> is missing.'
-        };
+        }
+      }
       break;
     case 'ORCHESTRATION':
-      if (options.body.nextOrchestrationId == undefined)
+      if (options.body.nextOrchestrationId == undefined) {
+        log.warn('Required element <sound.volume> is missing.')
         return {
           status: 400,
           data: 'Required element <nextOrchestrationId> is missing.'
-        };
+        }
+      }
       break;
     }
 

@@ -2,9 +2,36 @@
     "id": 1545654195319,
     "name": "Test orchestration 10",
     "symphonyId": 123,
-    "startDelayMin": 5,
-    "startDelayMax": 10,
+    "startDelayMin": 0,
+    "startDelayMax": 0,
     "autoStart": false,
-    "triggers": [],
-    "actions": []
+    "triggers": [
+        1545578731995
+    ],
+    "actions": [
+        {
+            "id": 1549937370119,
+            "orchestrationId": 1545654195319,
+            "sound": {
+                "soundId": 0,
+                "volume": 0,
+                "speakers": []
+            },
+            "type": "ORCHESTRATION",
+            "nextOrchestrationId": 22222
+        },
+        {
+            "id": 1549937477161,
+            "orchestrationId": 1545654195319,
+            "sound": {
+                "soundId": 1548024567478,
+                "volume": 45,
+                "speakers": [
+                    4,
+                    5
+                ]
+            },
+            "type": "SOUND"
+        }
+    ]
 }

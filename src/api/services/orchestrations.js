@@ -121,24 +121,24 @@ module.exports.getOrchestration = async (options) => {
     })
     let response
     if (myOrchestration) {
-      //Look up the actions for this orchestration.  Attach them in the result.actions array.
-      const actions = require('./actions')
-      const lstActions = actions.lstActions
-      myOrchestration.actions = lstActions.filter(obj => {
-        return obj.orchestrationId == myOrchestration.id
-      })
-      if (options.resolveTriggers) {
-        //Look up the triggers for this orchestration.  Attach them in the result.triggers array.
-        const triggers = require('./triggers')
-        const lstTriggers = triggers.lstTriggers
-        const triggerIds = myOrchestration.triggers
-        myOrchestration.triggers = []
-        triggerIds.forEach(element => {
-          myOrchestration.triggers.push(lstTriggers.find(obj => {
-            return obj.id == element
-          }))
-        })
-      }
+      // //Look up the actions for this orchestration.  Attach them in the result.actions array.
+      // const actions = require('./actions')
+      // const lstActions = actions.lstActions
+      // myOrchestration.actions = lstActions.filter(obj => {
+      //   return obj.orchestrationId == myOrchestration.id
+      // })
+      // if (options.resolveTriggers) {
+      //   //Look up the triggers for this orchestration.  Attach them in the result.triggers array.
+      //   const triggers = require('./triggers')
+      //   const lstTriggers = triggers.lstTriggers
+      //   const triggerIds = myOrchestration.triggers
+      //   myOrchestration.triggers = []
+      //   triggerIds.forEach(element => {
+      //     myOrchestration.triggers.push(lstTriggers.find(obj => {
+      //       return obj.id == element
+      //     }))
+      //   })
+      // }
       response = {
         status: 200,
         data: myOrchestration
@@ -265,6 +265,7 @@ module.exports.execute = async (options) => {
     if (theOrch.status == 200) {
       // Found it. Check for any actions.
       log.info(`Executing orchestration ${theOrch.data.id} - ${theOrch.data.name} now...`)
+      log.debug(JSON.stringify(theOrch))
       if (theOrch.data.actions == undefined || theOrch.data.actions.length == 0) {
         log.warn(`Orchestration ${theOrch.data.id} - ${theOrch.data.name}: No actions to execute.`)
         return {
@@ -272,9 +273,13 @@ module.exports.execute = async (options) => {
           data: 'No actions to execute.'
         }
       }
-      if (theOrch.data.startDelay == undefined) theOrch.data.startDelay = 0 // Set a default start delay of 0 ms.
-      if (theOrch.data.startDelay > 0) {
-        log.info(`Pausing for ${theOrch.data.startDelay} milliseconds...`)
+      let startDelay = 0
+      if (theOrch.data.startDelayMin && theOrch.data.startDelayMin > 0) {
+        // Calculate a random start delay within the bound of the min and max configured.
+        startDelay = Math.floor(Math.random() * (theOrch.data.startDelayMax - theOrch.data.startDelayMin + 1)) + theOrch.data.startDelayMin
+      }
+      if (startDelay > 0) {
+        log.info(`Pausing for ${startDelay} seconds...`)
       }
       setTimeout(() => {
         // Timeout has expired.  Execute all actions now.
@@ -290,7 +295,7 @@ module.exports.execute = async (options) => {
             // If it is, then it's an 'ambient sound'.  Ambient sounds are
             // controlled by a master switch, so check it before chaining back
             // to yourself.
-            if (action.nextOrchestrationId == theOrch.id && appSettings.getSetting('playAmbientSounds') == false) {
+            if (action.nextOrchestrationId == theOrch.data.id && appSettings.getSetting('playAmbientSounds') == false) {
               break
             }
             // Call another orchestration
@@ -301,7 +306,7 @@ module.exports.execute = async (options) => {
             break
           }
         })
-      }, theOrch.data.startDelay)
+      }, startDelay * 1000)
       return {
         status: 200
       }
@@ -334,11 +339,15 @@ module.exports.startAmbient = async () => {
     const symphonyResp = await symphonies.findSymphonies({
       active: true
     })
-    const symphony = await symphonies.getSymphony({id: symphonyResp.data.id})
+    const symphony = await symphonies.getSymphony({
+      id: symphonyResp.data.id
+    })
     symphony.data.orchestrations.forEach(orchestration => {
       if (orchestration.autoStart) {
         log.debug(`${className}:startAmbient: Starting orchestration ${orchestration.id}`)
-        this.execute({id: orchestration.id})
+        this.execute({
+          id: orchestration.id
+        })
       }
     })
     return {

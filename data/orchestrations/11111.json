@@ -2,8 +2,8 @@
     "id": 11111,
     "name": "Test orchestration 420",
     "symphonyId": 123,
-    "startDelayMin": 0,
-    "startDelayMax": 0,
+    "startDelayMin": 5,
+    "startDelayMax": 15,
     "autoStart": true,
     "triggers": [
         1545578731995,
@@ -30,7 +30,7 @@
             "id": 1545497777,
             "type": "ORCHESTRATION",
             "orchestrationId": 11111,
-            "nextOrchestrationId": 22222
+            "nextOrchestrationId": 11111
         }
     ]
 }

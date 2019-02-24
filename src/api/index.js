@@ -49,7 +49,7 @@ app.use(cookieParser());
  * Routes
  */
 app.use('/orchestrations', require('./routes/orchestrations'));
-app.use('/actions', require('./routes/actions'));
+//app.use('/actions', require('./routes/actions'));
 app.use('/symphonies', require('./routes/symphonies'));
 app.use('/sounds', require('./routes/sounds'));
 app.use('/triggers', require('./routes/triggers'));

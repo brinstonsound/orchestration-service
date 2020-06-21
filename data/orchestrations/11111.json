@@ -7,7 +7,6 @@
     "autoStart": true,
     "triggers": [
         1545578731995,
-        1545578740539,
         101,
         1545578748085
     ],
@@ -18,7 +17,7 @@
             "type": "SOUND",
             "sound": {
                 "soundId": 1546314277836,
-                "volume": 38,
+                "volume": 27,
                 "speakers": [
                     9,
                     6,
